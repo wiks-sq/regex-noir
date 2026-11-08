@@ -1,0 +1,14 @@
+# Kept local on purpose: answer key and original spec
+SOLUTIONS.md
+Claude Prompt Specification.md
+
+# Build output used by the Pages workflow
+_site/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+node_modules/

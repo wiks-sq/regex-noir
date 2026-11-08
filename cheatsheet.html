@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Cheat Sheet // Regex Noir Field Manual</title>
+  <meta name="description" content="A regular expression cheat sheet with live examples: character classes, quantifiers, anchors, groups, backreferences, lookarounds and flags. The field manual for Regex Noir.">
+  <meta name="keywords" content="regex cheat sheet, regular expressions reference, javascript regex, lookahead, capture groups, regex quantifiers">
+  <meta name="theme-color" content="#ebe2d0">
+  <link rel="canonical" href="https://wiks-sq.github.io/regex-noir/cheatsheet.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://wiks-sq.github.io/regex-noir/cheatsheet.html">
+  <meta property="og:title" content="Regex Cheat Sheet // Regex Noir Field Manual">
+  <meta property="og:description" content="Every regex token you need for Regex Noir, with live, editable examples.">
+  <meta property="og:image" content="https://wiks-sq.github.io/regex-noir/og-image.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Regex Cheat Sheet // Regex Noir">
+  <meta property="twitter:description" content="Character classes, quantifiers, anchors, groups, lookarounds and flags, with live examples.">
+  <meta property="twitter:image" content="https://wiks-sq.github.io/regex-noir/og-image.png">
+
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- Theme tokens (kept in sync with index.html) ---------- */
+    :root, [data-theme="light"] {
+      --bg: #f8f3e8;
+      --panel: #fbf7ef;
+      --secondary: #ebe2d0;
+      --bg2: #f1e9da;
+      --panel2: #efe6d5;
+      --border: #ddd1bb;
+      --text: #2d2a24;
+      --muted: #776d5f;
+      --accent: #1f6f68;
+      --accent2: #2d2a24;
+      --on-accent: #ffffff;
+      --warn: #9a6516;
+      --ok: #3f7a3a;
+      --err: #b3412f;
+      --mark-bg: #cfe6e1;
+      --mark-text: #1b3d39;
+      --glow: 0 0 0 3px rgba(31, 111, 104, .18);
+    }
+    [data-theme="contrast"] {
+      --bg: #fbf6ea;
+      --panel: #fbf6ea;
+      --secondary: #efe6d2;
+      --bg2: #fbf6ea;
+      --panel2: #f4ecdb;
+      --border: #000000;
+      --text: #000000;
+      --muted: #333333;
+      --accent: #00524c;
+      --accent2: #000000;
+      --on-accent: #ffffff;
+      --warn: #6b3d00;
+      --ok: #1f5a1b;
+      --err: #9a1c0c;
+      --mark-bg: #ffe14d;
+      --mark-text: #000000;
+      --glow: 0 0 0 2px #000000;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body { background: var(--bg); color: var(--text); margin: 0; }
+    body { font-family: "Space Grotesk", system-ui, sans-serif; min-height: 100vh; overflow-x: hidden; line-height: 1.5; }
+    a { color: var(--accent); }
+    code, pre, .mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    .wrap { max-width: 80rem; margin: 0 auto; padding: 0 16px; }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; }
+    .panel2 { background: var(--panel2); border: 1px solid var(--border); border-radius: 10px; }
+    .muted { color: var(--muted); }
+    .accent { color: var(--accent); }
+    .label { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+      font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500;
+      padding: .55rem .9rem; border-radius: 9px; border: 1px solid var(--border);
+      background: var(--panel2); color: var(--text); cursor: pointer; text-decoration: none;
+      transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--accent); box-shadow: var(--glow); }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 700; }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn:focus-visible, .chip:focus-visible, .entry:focus-visible, input:focus-visible, textarea:focus-visible, .toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .chip {
+      font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700;
+      width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--panel2); color: var(--muted); cursor: pointer; transition: all .15s;
+    }
+    .chip[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); box-shadow: var(--glow); }
+
+    .tok { font-family: "JetBrains Mono", monospace; color: var(--accent); background: var(--panel2); border: 1px solid var(--border); padding: 0 .35rem; border-radius: 5px; white-space: pre; font-size: 13px; }
+    .kbd { font-family: "JetBrains Mono", monospace; font-size: 11px; border: 1px solid var(--border); border-bottom-width: 2px; padding: 0 .35rem; border-radius: 5px; color: var(--muted); }
+    mark.hit { background: var(--mark-bg); color: var(--mark-text); border-radius: 3px; padding: 1px 0; }
+    mark.hit.alt { filter: brightness(.94); }
+    .zero { display: inline-block; width: 2px; height: 1.1em; vertical-align: text-bottom; background: var(--warn); margin: 0 -1px; }
+
+    /* ---------- Header ---------- */
+    header.top { background: var(--secondary); border-bottom: 1px solid var(--border); }
+    header.top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; color: inherit; }
+    .logo { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 18px; background: var(--panel2); border: 1px solid var(--accent); color: var(--accent); box-shadow: var(--glow); flex-shrink: 0; }
+    .brand h1 { margin: 0; font-size: 1.15rem; line-height: 1.2; letter-spacing: -.01em; }
+    .brand h1 .sub { color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: .85rem; font-weight: 400; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* ---------- Intro ---------- */
+    .intro { padding: 28px 0 8px; }
+    .intro h2 { font-size: clamp(1.6rem, 4vw, 2.3rem); margin: 6px 0 8px; letter-spacing: -.02em; line-height: 1.15; }
+    .intro p { margin: 0; max-width: 46rem; color: var(--muted); }
+    .stamp { display: inline-block; border: 2px solid var(--accent); color: var(--accent); font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 11px; letter-spacing: .2em; padding: .2rem .6rem; transform: rotate(-2deg); border-radius: 5px; }
+
+    /* ---------- Layout ---------- */
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 16px 0 32px; }
+    @media (min-width: 1024px) {
+      .layout { grid-template-columns: minmax(0, 1fr) 380px; align-items: start; }
+      .console-col { position: sticky; top: 16px; order: 2; }
+    }
+
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+    .search { flex: 1 1 220px; display: flex; align-items: center; gap: .4rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 0 .7rem; }
+    .search:focus-within { border-color: var(--accent); box-shadow: var(--glow); }
+    .search input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; color: var(--text); font: inherit; font-size: 15px; padding: .6rem 0; }
+    .toc { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px; margin-bottom: 14px; }
+    .toc::-webkit-scrollbar { display: none; }
+    .toc a { flex: 0 0 auto; font-family: "JetBrains Mono", monospace; font-size: 12px; text-decoration: none; color: var(--muted); padding: .4rem .6rem; border-radius: 9px; border: 1px solid var(--border); background: var(--panel2); }
+    .toc a:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ---------- Sections ---------- */
+    section.sheet { padding: 16px; margin-bottom: 16px; scroll-margin-top: 16px; }
+    .sheet-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 12px; }
+    .sheet-head h3 { margin: 0; font-size: 1.15rem; letter-spacing: -.01em; }
+    .sheet-head h3 .num { font-family: "JetBrains Mono", monospace; color: var(--accent); font-size: .9rem; margin-right: .4rem; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    @media (min-width: 680px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+    .entry {
+      display: flex; align-items: flex-start; gap: 10px; text-align: left; width: 100%;
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px; color: var(--text); font: inherit; cursor: pointer;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .entry:hover { border-color: var(--accent); box-shadow: var(--glow); }
+    .entry.static { cursor: default; }
+    .entry.static:hover { border-color: var(--border); box-shadow: none; }
+    .entry .tok { flex-shrink: 0; margin-top: 1px; }
+    .entry .body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .entry .desc { font-size: 14px; line-height: 1.4; }
+    .entry .ex { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); white-space: pre-wrap; word-break: break-word; line-height: 1.6; }
+    .entry .ex .pat { color: var(--accent); }
+    .entry[hidden], section.sheet[hidden] { display: none; }
+
+    .notes { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    @media (min-width: 680px) { .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .note { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--warn); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+    .note b { display: block; margin-bottom: 2px; }
+    .note p { margin: 0; color: var(--muted); }
+
+    table.flags { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.flags th, table.flags td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    table.flags th { font-weight: 500; }
+    table.flags tr:last-child td { border-bottom: 0; }
+
+    .empty { display: none; text-align: center; padding: 28px 16px; }
+    .empty.on { display: block; }
+
+    /* ---------- Console ---------- */
+    .console { padding: 16px; }
+    .console h3 { margin: 4px 0 12px; font-size: 1.05rem; }
+    .regex-wrap { display: flex; align-items: center; gap: .25rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: .2rem .6rem; font-family: "JetBrains Mono", monospace; transition: border-color .15s, box-shadow .15s; }
+    .regex-wrap:focus-within { border-color: var(--accent); box-shadow: var(--glow); }
+    .regex-wrap.bad { border-color: var(--err); box-shadow: 0 0 0 3px rgba(179, 65, 47, .15); }
+    .regex-wrap input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--text); font-size: 16px; padding: .5rem .2rem; font-family: inherit; }
+    .regex-wrap .slash { color: var(--accent2); font-size: 18px; font-weight: 700; }
+    .regex-wrap .fl { color: var(--accent); font-size: 14px; min-width: 1ch; }
+    .flagrow { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 12px; }
+    textarea.sample { width: 100%; min-height: 96px; resize: vertical; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.6; padding: .6rem .75rem; outline: none; }
+    textarea.sample:focus { border-color: var(--accent); box-shadow: var(--glow); }
+    .out { margin-top: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: .6rem .75rem; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; min-height: 3em; max-height: 220px; overflow: auto; }
+    .status { margin-top: 10px; font-family: "JetBrains Mono", monospace; font-size: 12px; }
+    .status.ok { color: var(--ok); } .status.err { color: var(--err); } .status.idle { color: var(--muted); }
+    .matches { margin: 8px 0 0; padding: 0; list-style: none; font-family: "JetBrains Mono", monospace; font-size: 12px; max-height: 180px; overflow: auto; }
+    .matches li { padding: 4px 0; border-top: 1px dashed var(--border); display: flex; flex-wrap: wrap; gap: 4px 8px; }
+    .matches .idx { color: var(--muted); }
+    .matches .grp { color: var(--muted); }
+    .matches .grp b { color: var(--accent); font-weight: 500; }
+    .hintline { margin-top: 12px; font-size: 12px; }
+
+    /* ---------- Footer ---------- */
+    footer { background: var(--secondary); border-top: 1px solid var(--border); margin-top: 8px; }
+    footer .wrap { padding-top: 24px; padding-bottom: 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; font-size: 14px; }
+
+    @media (max-width: 520px) { .hide-sm { display: none; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+
+    /* ---------- Print: a two-column paper sheet ---------- */
+    @media print {
+      html, body { background: #fff; }
+      header.top .actions, .toolbar, .toc, .console-col, footer .actions { display: none !important; }
+      .layout { display: block; padding: 0; }
+      .intro { padding-top: 8px; }
+      section.sheet { break-inside: avoid; border-color: #bbb; padding: 10px; margin-bottom: 10px; }
+      .entry { break-inside: avoid; padding: 6px 8px; }
+      .entry, .note, .tok { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html" title="Back to the game">
+        <div class="logo" aria-hidden="true">/.*/</div>
+        <h1><span class="accent">Regex Noir</span> <span class="sub">// Field Manual</span></h1>
+      </a>
+      <div class="actions">
+        <button class="btn" id="themeBtn" type="button" title="Switch between Cream and High Contrast"><span id="themeIcon">☀</span><span class="hide-sm" id="themeName">Cream</span></button>
+        <button class="btn" type="button" onclick="window.print()" title="Print this cheat sheet">⎙<span class="hide-sm">Print</span></button>
+        <a class="btn btn-primary" href="index.html">▸ Back to Cases</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="intro">
+      <span class="stamp">CLASSIFIED · AGENT ISSUE</span>
+      <h2>Regex Cheat Sheet</h2>
+      <p>Every token the cases call for, plus a few you'll want later. Each entry shows a live example with its matches highlighted. Click one to load it into the scratch console and change it. This page uses JavaScript regex, the same engine as the game.</p>
+    </div>
+
+    <div class="layout">
+      <!-- ================= SCRATCH CONSOLE ================= -->
+      <aside class="console-col" aria-label="Scratch console">
+        <div class="panel console">
+          <span class="label">Scratch Console</span>
+          <h3>Test a pattern</h3>
+          <div class="regex-wrap" id="rxWrap">
+            <span class="slash">/</span>
+            <input id="rx" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Regular expression pattern" value="PHANTOM_\d{3}">
+            <span class="slash">/</span><span class="fl" id="flShow">g</span>
+          </div>
+          <div class="flagrow" role="group" aria-label="Flags">
+            <button class="chip" type="button" data-flag="g" aria-pressed="true" title="global: find every match">g</button>
+            <button class="chip" type="button" data-flag="i" aria-pressed="false" title="ignore case">i</button>
+            <button class="chip" type="button" data-flag="m" aria-pressed="false" title="multiline: ^ and $ per line">m</button>
+            <button class="chip" type="button" data-flag="s" aria-pressed="false" title="dotAll: . also matches newline">s</button>
+            <button class="chip" type="button" data-flag="u" aria-pressed="false" title="unicode: enables \p{…} and stricter syntax">u</button>
+          </div>
+          <label class="label" for="sample">Intercepted text</label>
+          <textarea class="sample" id="sample" spellcheck="false" style="margin-top:6px">LOG 08:01: PHANTOM_942 DETECTED
+LOG 08:02: NORMAL_PING_102
+LOG 08:09: PHANTOM_ERR DETECTED</textarea>
+          <div class="out" id="out" aria-live="polite"></div>
+          <div class="status idle" id="status"></div>
+          <ul class="matches" id="matches"></ul>
+          <div class="hintline muted">Type the pattern without slashes, as in the game. Press <span class="kbd">/</span> to jump to search.</div>
+        </div>
+      </aside>
+
+      <!-- ================= REFERENCE ================= -->
+      <div>
+        <div class="toolbar">
+          <label class="search">
+            <span class="accent mono" aria-hidden="true">⌕</span>
+            <input id="q" type="search" placeholder="Search tokens or descriptions (e.g. lookahead, \b, lazy)" aria-label="Search the cheat sheet">
+          </label>
+        </div>
+        <nav class="toc" aria-label="Sections">
+          <a href="#literals">01 Literals</a>
+          <a href="#classes">02 Classes</a>
+          <a href="#sets">03 Sets</a>
+          <a href="#quant">04 Quantifiers</a>
+          <a href="#anchors">05 Anchors</a>
+          <a href="#groups">06 Groups</a>
+          <a href="#look">07 Lookaround</a>
+          <a href="#flags">08 Flags</a>
+          <a href="#recipes">09 Recipes</a>
+          <a href="#traps">10 Traps</a>
+        </nav>
+
+        <!-- 01 -->
+        <section class="panel sheet" id="literals">
+          <div class="sheet-head"><h3><span class="num">01</span>Literals &amp; Escapes</h3><span class="label">Case 01</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="PHANTOM" data-f="g" data-s="PHANTOM_942 phantom_108"><code class="tok">abc</code><span class="body"><span class="desc">Letters and digits match themselves, case-sensitively</span><span class="ex">PHANTOM_942 phantom_108</span></span></button>
+            <button class="entry" type="button" data-p="10\.0" data-f="g" data-s="v10.0 v1000 v10-0"><code class="tok">\.</code><span class="body"><span class="desc">A backslash makes a special character literal. Here, a real dot</span><span class="ex">v10.0 v1000 v10-0</span></span></button>
+            <button class="entry" type="button" data-p="\$\d+" data-f="g" data-s="bribe $40, fee 40$"><code class="tok">\$ \( \[ \{ \* \+ \? \|</code><span class="body"><span class="desc">Special characters that need escaping: <code>. ^ $ * + ? ( ) [ ] { } | \</code></span><span class="ex">bribe $40, fee 40$</span></span></button>
+            <button class="entry" type="button" data-p="\\" data-f="g" data-s="C:\logs\relay"><code class="tok">\\</code><span class="body"><span class="desc">A literal backslash</span><span class="ex">C:\logs\relay</span></span></button>
+            <button class="entry" type="button" data-p="\/" data-f="g" data-s="GET /api/v2"><code class="tok">\/</code><span class="body"><span class="desc">A literal slash. Escaping is optional in the game console</span><span class="ex">GET /api/v2</span></span></button>
+            <div class="entry static"><code class="tok">\n \t \r</code><span class="body"><span class="desc">Newline, tab and carriage return</span></span></div>
+            <button class="entry" type="button" data-p="\x41" data-f="g" data-s="ABBA"><code class="tok">\x41 \u00e9</code><span class="body"><span class="desc">A character by its hex code (2 or 4 digits)</span><span class="ex">ABBA</span></span></button>
+          </div>
+        </section>
+
+        <!-- 02 -->
+        <section class="panel sheet" id="classes">
+          <div class="sheet-head"><h3><span class="num">02</span>Character Classes</h3><span class="label">Cases 01–02</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="c.t" data-f="g" data-s="cat c-t c t ct"><code class="tok">.</code><span class="body"><span class="desc">Any single character except a newline (unless the <code>s</code> flag is on)</span><span class="ex">cat c-t c t ct</span></span></button>
+            <button class="entry" type="button" data-p="\d" data-f="g" data-s="PIN 4071"><code class="tok">\d</code><span class="body"><span class="desc">Any digit 0–9</span><span class="ex">PIN 4071</span></span></button>
+            <button class="entry" type="button" data-p="\D+" data-f="g" data-s="A1B22C"><code class="tok">\D</code><span class="body"><span class="desc">Any character that is not a digit</span><span class="ex">A1B22C</span></span></button>
+            <button class="entry" type="button" data-p="\w+" data-f="g" data-s="node_7, alpha-2!"><code class="tok">\w</code><span class="body"><span class="desc">A word character: letter, digit or underscore</span><span class="ex">node_7, alpha-2!</span></span></button>
+            <button class="entry" type="button" data-p="\W" data-f="g" data-s="a-b c!"><code class="tok">\W</code><span class="body"><span class="desc">Anything that is not a word character</span><span class="ex">a-b c!</span></span></button>
+            <button class="entry" type="button" data-p="\s+" data-f="g" data-s="ping   relay  node"><code class="tok">\s</code><span class="body"><span class="desc">Whitespace: space, tab, newline</span><span class="ex">ping   relay  node</span></span></button>
+            <button class="entry" type="button" data-p="\S+" data-f="g" data-s="GET /index.html 200"><code class="tok">\S</code><span class="body"><span class="desc">Any non-whitespace character</span><span class="ex">GET /index.html 200</span></span></button>
+            <button class="entry" type="button" data-p="\p{L}+" data-f="gu" data-s="café naïve 123"><code class="tok">\p{L}</code><span class="body"><span class="desc">Any Unicode letter, including accented ones. Needs the <code>u</code> flag</span><span class="ex">café naïve 123</span></span></button>
+          </div>
+        </section>
+
+        <!-- 03 -->
+        <section class="panel sheet" id="sets">
+          <div class="sheet-head"><h3><span class="num">03</span>Character Sets &amp; Ranges</h3><span class="label">Cases 04–05</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="[aeiou]" data-f="g" data-s="cipher signal"><code class="tok">[abc]</code><span class="body"><span class="desc">One character from the set</span><span class="ex">cipher signal</span></span></button>
+            <button class="entry" type="button" data-p="[a-f]+" data-f="g" data-s="deadbeef cafe zzz"><code class="tok">[a-z]</code><span class="body"><span class="desc">One character from a range</span><span class="ex">deadbeef cafe zzz</span></span></button>
+            <button class="entry" type="button" data-p="[A-Fa-f0-9]+" data-f="g" data-s="#1F6F68 #zzz"><code class="tok">[A-Za-z0-9]</code><span class="body"><span class="desc">Several ranges combined in one set</span><span class="ex">#1F6F68 #zzz</span></span></button>
+            <button class="entry" type="button" data-p="&lt;[^&gt;]+&gt;" data-f="g" data-s="&lt;b&gt;bold&lt;/b&gt; text"><code class="tok">[^abc]</code><span class="body"><span class="desc">Negated set: any character <em>not</em> listed. <code>[^&gt;]+</code> runs up to the next <code>&gt;</code></span><span class="ex">&lt;b&gt;bold&lt;/b&gt; text</span></span></button>
+            <button class="entry" type="button" data-p="[.?!]" data-f="g" data-s="Wait. Why? Now!"><code class="tok">[.?!]</code><span class="body"><span class="desc">Most special characters are literal inside a set</span><span class="ex">Wait. Why? Now!</span></span></button>
+            <button class="entry" type="button" data-p="[\d.]+" data-f="g" data-s="relay 10.0.0.12 up"><code class="tok">[\d.]</code><span class="body"><span class="desc">Classes like <code>\d</code> and <code>\s</code> also work inside a set</span><span class="ex">relay 10.0.0.12 up</span></span></button>
+            <button class="entry" type="button" data-p="[-+]\d" data-f="g" data-s="-4 +7 =9"><code class="tok">[-+]</code><span class="body"><span class="desc">Put <code>-</code> first or last to make it a literal hyphen</span><span class="ex">-4 +7 =9</span></span></button>
+            <button class="entry" type="button" data-p="[^\s]+" data-f="g" data-s="two  words"><code class="tok">[^\s]</code><span class="body"><span class="desc">Same as <code>\S</code>. <code>[^0-9]</code> is the same as <code>\D</code></span><span class="ex">two  words</span></span></button>
+          </div>
+        </section>
+
+        <!-- 04 -->
+        <section class="panel sheet" id="quant">
+          <div class="sheet-head"><h3><span class="num">04</span>Quantifiers</h3><span class="label">Cases 01, 02, 08</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="ab*c" data-f="g" data-s="ac abc abbbc"><code class="tok">*</code><span class="body"><span class="desc">0 or more of the previous token</span><span class="ex">ac abc abbbc</span></span></button>
+            <button class="entry" type="button" data-p="ab+c" data-f="g" data-s="ac abc abbbc"><code class="tok">+</code><span class="body"><span class="desc">1 or more</span><span class="ex">ac abc abbbc</span></span></button>
+            <button class="entry" type="button" data-p="colou?r" data-f="g" data-s="color colour colouur"><code class="tok">?</code><span class="body"><span class="desc">0 or 1: makes the previous token optional</span><span class="ex">color colour colouur</span></span></button>
+            <button class="entry" type="button" data-p="\b\d{3}\b" data-f="g" data-s="7 42 108 9999"><code class="tok">{3}</code><span class="body"><span class="desc">Exactly 3</span><span class="ex">7 42 108 9999</span></span></button>
+            <button class="entry" type="button" data-p="\d{2,}" data-f="g" data-s="7 42 108"><code class="tok">{2,}</code><span class="body"><span class="desc">2 or more</span><span class="ex">7 42 108</span></span></button>
+            <button class="entry" type="button" data-p="\b\d{2,3}\b" data-f="g" data-s="7 42 108 9999"><code class="tok">{2,3}</code><span class="body"><span class="desc">Between 2 and 3, inclusive</span><span class="ex">7 42 108 9999</span></span></button>
+            <button class="entry" type="button" data-p="&quot;.+&quot;" data-f="g" data-s="say &quot;hi&quot; and &quot;bye&quot;"><code class="tok">.+</code><span class="body"><span class="desc">Greedy: takes as much as it can, then backs off</span><span class="ex">say "hi" and "bye"</span></span></button>
+            <button class="entry" type="button" data-p="&quot;.+?&quot;" data-f="g" data-s="say &quot;hi&quot; and &quot;bye&quot;"><code class="tok">.+? *? ??</code><span class="body"><span class="desc">Lazy: add <code>?</code> to any quantifier to take as little as possible</span><span class="ex">say "hi" and "bye"</span></span></button>
+            <button class="entry" type="button" data-p="(?:ab)+" data-f="g" data-s="ababab abba"><code class="tok">(ab)+</code><span class="body"><span class="desc">Quantify a whole group, not just one character</span><span class="ex">ababab abba</span></span></button>
+          </div>
+        </section>
+
+        <!-- 05 -->
+        <section class="panel sheet" id="anchors">
+          <div class="sheet-head"><h3><span class="num">05</span>Anchors &amp; Boundaries</h3><span class="label">Case 03</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="^SIG" data-f="gm" data-s="SIG one&#10;relay SIG two&#10;SIG three"><code class="tok">^</code><span class="body"><span class="desc">Start of the text, or of each line with the <code>m</code> flag</span><span class="ex">SIG one
+relay SIG two
+SIG three</span></span></button>
+            <button class="entry" type="button" data-p="\d+$" data-f="gm" data-s="a 1&#10;b 22 x&#10;c 333"><code class="tok">$</code><span class="body"><span class="desc">End of the text, or of each line with <code>m</code></span><span class="ex">a 1
+b 22 x
+c 333</span></span></button>
+            <button class="entry" type="button" data-p="\bcat\b" data-f="g" data-s="cat concat cat_ cats"><code class="tok">\b</code><span class="body"><span class="desc">Word boundary: between a <code>\w</code> and a non-<code>\w</code>. Takes no width</span><span class="ex">cat concat cat_ cats</span></span></button>
+            <button class="entry" type="button" data-p="\Bcat" data-f="g" data-s="cat concat"><code class="tok">\B</code><span class="body"><span class="desc">Not a word boundary: inside a word</span><span class="ex">cat concat</span></span></button>
+            <button class="entry" type="button" data-p="^\w+$" data-f="gm" data-s="alpha&#10;beta gamma&#10;delta"><code class="tok">^…$</code><span class="body"><span class="desc">The whole line must match (with <code>m</code>)</span><span class="ex">alpha
+beta gamma
+delta</span></span></button>
+          </div>
+        </section>
+
+        <!-- 06 -->
+        <section class="panel sheet" id="groups">
+          <div class="sheet-head"><h3><span class="num">06</span>Groups, Alternation &amp; Backreferences</h3><span class="label">Cases 06–08</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="(\d+)-(\d+)" data-f="g" data-s="10-20 and 3-4"><code class="tok">(abc)</code><span class="body"><span class="desc">Capture group. Numbered from 1 by its opening parenthesis</span><span class="ex">10-20 and 3-4</span></span></button>
+            <button class="entry" type="button" data-p="(?:ha)+" data-f="g" data-s="hahaha ha"><code class="tok">(?:abc)</code><span class="body"><span class="desc">Non-capturing group: groups without taking a number</span><span class="ex">hahaha ha</span></span></button>
+            <button class="entry" type="button" data-p="(?&lt;user&gt;\w+)@(?&lt;host&gt;\w+)" data-f="g" data-s="ops@grid jj@node"><code class="tok">(?&lt;name&gt;…)</code><span class="body"><span class="desc">Named capture group</span><span class="ex">ops@grid jj@node</span></span></button>
+            <button class="entry" type="button" data-p="\b(\w+) \1\b" data-f="g" data-s="the the signal is is clear"><code class="tok">\1</code><span class="body"><span class="desc">Backreference: the same text group 1 matched. <code>\2</code> for group 2</span><span class="ex">the the signal is is clear</span></span></button>
+            <button class="entry" type="button" data-p="(?&lt;q&gt;['&quot;]).*?\k&lt;q&gt;" data-f="g" data-s="'one' &quot;two&quot; 'mixed&quot;"><code class="tok">\k&lt;name&gt;</code><span class="body"><span class="desc">Backreference to a named group</span><span class="ex">'one' "two" 'mixed"</span></span></button>
+            <button class="entry" type="button" data-p="cat|dog" data-f="g" data-s="cat bird dog"><code class="tok">a|b</code><span class="body"><span class="desc">Alternation: either side. Has the lowest precedence of any operator</span><span class="ex">cat bird dog</span></span></button>
+            <button class="entry" type="button" data-p="^(GET|POST) " data-f="gm" data-s="GET /a&#10;PUT /b&#10;POST /c"><code class="tok">(GET|POST)</code><span class="body"><span class="desc">Wrap alternatives in a group to keep them from swallowing the rest of the pattern</span><span class="ex">GET /a
+PUT /b
+POST /c</span></span></button>
+          </div>
+        </section>
+
+        <!-- 07 -->
+        <section class="panel sheet" id="look">
+          <div class="sheet-head"><h3><span class="num">07</span>Lookahead &amp; Lookbehind</h3><span class="label">Case 09</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="\d+(?=px)" data-f="g" data-s="12px 3em 40px"><code class="tok">(?=X)</code><span class="body"><span class="desc">Positive lookahead: X must follow, but isn't part of the match</span><span class="ex">12px 3em 40px</span></span></button>
+            <button class="entry" type="button" data-p="foo(?!bar)" data-f="g" data-s="foobar foobaz"><code class="tok">(?!X)</code><span class="body"><span class="desc">Negative lookahead: X must not follow</span><span class="ex">foobar foobaz</span></span></button>
+            <button class="entry" type="button" data-p="(?&lt;=\$)\d+" data-f="g" data-s="$40 and 40"><code class="tok">(?&lt;=X)</code><span class="body"><span class="desc">Positive lookbehind: X must come right before</span><span class="ex">$40 and 40</span></span></button>
+            <button class="entry" type="button" data-p="(?&lt;!\$)\b\d+" data-f="g" data-s="$40 and 40"><code class="tok">(?&lt;!X)</code><span class="body"><span class="desc">Negative lookbehind: X must not come right before</span><span class="ex">$40 and 40</span></span></button>
+            <button class="entry" type="button" data-p="^(?=.*\d)\w{6,}$" data-f="gm" data-s="secret&#10;secr3t&#10;ab1"><code class="tok">^(?=.*\d)</code><span class="body"><span class="desc">From the line start, check that a digit appears somewhere ahead. Stack several to require several things</span><span class="ex">secret
+secr3t
+ab1</span></span></button>
+          </div>
+        </section>
+
+        <!-- 08 -->
+        <section class="panel sheet" id="flags">
+          <div class="sheet-head"><h3><span class="num">08</span>Flags</h3><span class="label">All cases</span></div>
+          <table class="flags">
+            <thead><tr><th class="label">Flag</th><th class="label">Name</th><th class="label">Effect</th></tr></thead>
+            <tbody>
+              <tr><td><code class="tok">g</code></td><td>global</td><td>Find every match instead of stopping at the first. Almost every case needs it.</td></tr>
+              <tr><td><code class="tok">i</code></td><td>ignore case</td><td><code>a</code> also matches <code>A</code>. Easy to over-match with.</td></tr>
+              <tr><td><code class="tok">m</code></td><td>multiline</td><td><code>^</code> and <code>$</code> match at the start and end of every line.</td></tr>
+              <tr><td><code class="tok">s</code></td><td>dotAll</td><td><code>.</code> also matches newlines.</td></tr>
+              <tr><td><code class="tok">u</code></td><td>unicode</td><td>Treats the pattern as Unicode code points and enables <code>\p{…}</code>. Rejects useless escapes.</td></tr>
+              <tr><td><code class="tok">y</code></td><td>sticky</td><td>Match only at <code>lastIndex</code>. Rarely needed by hand.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 09 -->
+        <section class="panel sheet" id="recipes">
+          <div class="sheet-head"><h3><span class="num">09</span>Field Recipes</h3><span class="label">Off the books</span></div>
+          <div class="grid">
+            <button class="entry" type="button" data-p="\b\d{4}-\d{2}-\d{2}\b" data-f="g" data-s="filed 2026-11-07, ref 12-11-07"><code class="tok">\d{4}-\d{2}-\d{2}</code><span class="body"><span class="desc">ISO date (shape only, doesn't check the month is real)</span><span class="ex">filed 2026-11-07, ref 12-11-07</span></span></button>
+            <button class="entry" type="button" data-p="\b(?:[01]\d|2[0-3]):[0-5]\d\b" data-f="g" data-s="03:15 23:59 24:00 7:5"><code class="tok">([01]\d|2[0-3]):[0-5]\d</code><span class="body"><span class="desc">24-hour time, HH:MM</span><span class="ex">03:15 23:59 24:00 7:5</span></span></button>
+            <button class="entry" type="button" data-p="#(?:[0-9a-fA-F]{3}){1,2}\b" data-f="g" data-s="#1f6f68 #fff #ggg #12345"><code class="tok">#(?:[0-9a-f]{3}){1,2}</code><span class="body"><span class="desc">Hex color, 3 or 6 digits</span><span class="ex">#1f6f68 #fff #ggg #12345</span></span></button>
+            <button class="entry" type="button" data-p="&quot;[^&quot;]*&quot;" data-f="g" data-s="user=&quot;ghost&quot; note=&quot;&quot; x"><code class="tok">"[^"]*"</code><span class="body"><span class="desc">A double-quoted string, including an empty one</span><span class="ex">user="ghost" note="" x</span></span></button>
+            <button class="entry" type="button" data-p="(\w+)=(\S+)" data-f="g" data-s="host=relay-7 port=8443 tls=on"><code class="tok">(\w+)=(\S+)</code><span class="body"><span class="desc">key=value pairs, with key and value captured</span><span class="ex">host=relay-7 port=8443 tls=on</span></span></button>
+            <button class="entry" type="button" data-p="[ \t]+$" data-f="gm" data-s="clean&#10;dirty   &#10;ok"><code class="tok">[ \t]+$</code><span class="body"><span class="desc">Trailing spaces at the end of each line</span><span class="ex">clean
+dirty
+ok</span></span></button>
+          </div>
+        </section>
+
+        <!-- 10 -->
+        <section class="panel sheet" id="traps">
+          <div class="sheet-head"><h3><span class="num">10</span>Common Traps</h3><span class="label">Read before submitting</span></div>
+          <div class="notes">
+            <div class="note" data-k="greedy lazy .* .+?"><b>Greedy runs too far</b><p><code>".*"</code> grabs from the first quote to the <em>last</em> one. Use <code>".*?"</code> or <code>"[^"]*"</code>.</p></div>
+            <div class="note" data-k="m flag multiline ^ $"><b>^ only matched once</b><p>Without the <code>m</code> flag, <code>^</code> and <code>$</code> mean the whole text, not each line.</p></div>
+            <div class="note" data-k="dot escape \."><b>The unescaped dot</b><p><code>10.0</code> also matches <code>1000</code>. Write <code>\.</code> for a real dot.</p></div>
+            <div class="note" data-k="i flag case"><b>The i flag lets in decoys</b><p>Case-insensitive matching widens every letter in the pattern. Only use it when the case calls for it.</p></div>
+            <div class="note" data-k="underscore \w \b"><b>Underscore is a word character</b><p><code>\bSIG\b</code> doesn't match inside <code>SIG_DEBUG</code>, because <code>_</code> counts as part of the word.</p></div>
+            <div class="note" data-k="zero length empty * match"><b>Empty matches</b><p><code>\d*</code> matches the empty string at every position. Use <code>+</code> when you need at least one.</p></div>
+            <div class="note" data-k="alternation precedence |"><b>Alternation splits everything</b><p><code>^GET|POST /</code> means <code>^GET</code> or <code>POST /</code>. Group it: <code>^(GET|POST) /</code>.</p></div>
+            <div class="note" data-k="backtracking nested slow freeze"><b>Nested quantifiers</b><p>Patterns like <code>(a+)+$</code> can take exponential time on near-misses. Keep repeats unambiguous.</p></div>
+            <div class="note" data-k="group capture evidence order"><b>Which group is evidence?</b><p>Some cases grade capture group 1. Wrap helper groups in <code>(?:…)</code> so they don't take the first number.</p></div>
+          </div>
+        </section>
+
+        <div class="panel empty muted" id="empty">No tokens match that search. Try a symbol like <code class="tok">\b</code> or a word like <em>lazy</em>.</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="muted"><span class="accent" style="font-weight:700">Regex Noir</span> // Field Manual. Examples run on your browser's JavaScript regex engine.</div>
+      <div class="actions"><a class="btn" href="index.html">▸ Open the case files</a></div>
+    </div>
+  </footer>
+
+<script>
+(function () {
+  "use strict";
+  var GAME_KEY = "regexNoir.v1";        // the game's progress (holds settings.theme)
+  var OWN_KEY = "regexNoir.cheatsheet"; // fallback when the game hasn't saved anything yet
+  var THEMES = { light: "Cream", contrast: "High Contrast" };
+  var MAX = 500;
+
+  /* ---------- Theme: shared with the game when possible ---------- */
+  function readTheme() {
+    try {
+      var g = JSON.parse(localStorage.getItem(GAME_KEY) || "null");
+      if (g && g.settings && THEMES[g.settings.theme]) return g.settings.theme;
+    } catch (e) {}
+    try { var t = localStorage.getItem(OWN_KEY); if (THEMES[t]) return t; } catch (e) {}
+    return "light";
+  }
+  function saveTheme(t) {
+    try {
+      var raw = localStorage.getItem(GAME_KEY);
+      if (raw) {
+        var g = JSON.parse(raw);
+        if (g && typeof g === "object") {
+          g.settings = Object.assign({}, g.settings, { theme: t });
+          localStorage.setItem(GAME_KEY, JSON.stringify(g));
+          return;
+        }
+      }
+      localStorage.setItem(OWN_KEY, t);
+    } catch (e) {}
+  }
+  function applyTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    document.getElementById("themeIcon").textContent = t === "light" ? "☀" : "◑";
+    document.getElementById("themeName").textContent = THEMES[t];
+  }
+  var theme = readTheme();
+  applyTheme(theme);
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    theme = theme === "light" ? "contrast" : "light";
+    applyTheme(theme); saveTheme(theme);
+  });
+
+  /* ---------- Matching + highlighting ---------- */
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function run(pattern, flags, text) {
+    if (!pattern) return { status: "idle", list: [] };
+    var re;
+    try { re = new RegExp(pattern, flags); } catch (e) { return { status: "error", error: e.message, list: [] }; }
+    var list = [], m, t0 = Date.now();
+    if (!re.global && !re.sticky) {
+      m = re.exec(text);
+      if (m) list.push(m);
+    } else {
+      re.lastIndex = 0;
+      while ((m = re.exec(text)) !== null) {
+        list.push(m);
+        if (m[0] === "") re.lastIndex++;
+        if (list.length >= MAX || Date.now() - t0 > 200) break;
+      }
+    }
+    return { status: "ok", list: list };
+  }
+
+  function highlight(text, list) {
+    var html = "", pos = 0;
+    list.forEach(function (m, i) {
+      if (m.index < pos) return;
+      html += esc(text.slice(pos, m.index));
+      if (m[0] === "") html += '<span class="zero" title="zero-length match"></span>';
+      else html += '<mark class="hit' + (i % 2 ? " alt" : "") + '">' + esc(m[0]) + "</mark>";
+      pos = m.index + m[0].length;
+    });
+    return html + esc(text.slice(pos));
+  }
+
+  /* ---------- Live examples on each entry ---------- */
+  var entries = Array.prototype.slice.call(document.querySelectorAll(".entry[data-p]"));
+  entries.forEach(function (el) {
+    var ex = el.querySelector(".ex");
+    var s = el.getAttribute("data-s");
+    var r = run(el.getAttribute("data-p"), el.getAttribute("data-f"), s);
+    if (ex && r.status === "ok") {
+      ex.innerHTML = '<span class="pat">/' + esc(el.getAttribute("data-p")) + "/" + esc(el.getAttribute("data-f")) + "</span>  " + highlight(s, r.list);
+    }
+    el.title = "Load into the scratch console";
+    el.addEventListener("click", function () { load(el.getAttribute("data-p"), el.getAttribute("data-f"), s); });
+  });
+
+  /* ---------- Scratch console ---------- */
+  var rx = document.getElementById("rx"), sample = document.getElementById("sample");
+  var out = document.getElementById("out"), status = document.getElementById("status");
+  var matchesEl = document.getElementById("matches"), wrap = document.getElementById("rxWrap");
+  var flShow = document.getElementById("flShow");
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-flag]"));
+
+  function flags() { return chips.filter(function (c) { return c.getAttribute("aria-pressed") === "true"; }).map(function (c) { return c.getAttribute("data-flag"); }).join(""); }
+
+  function update() {
+    var f = flags(), text = sample.value, r = run(rx.value, f, text);
+    flShow.textContent = f;
+    wrap.classList.toggle("bad", r.status === "error");
+    matchesEl.innerHTML = "";
+    if (r.status === "error") {
+      out.innerHTML = esc(text);
+      status.className = "status err";
+      status.textContent = "✕ " + r.error;
+      return;
+    }
+    out.innerHTML = highlight(text, r.list) || '<span class="muted">(no text)</span>';
+    if (r.status === "idle") { status.className = "status idle"; status.textContent = "> awaiting pattern"; return; }
+    var n = r.list.length;
+    status.className = "status " + (n ? "ok" : "idle");
+    status.textContent = n ? "✓ " + n + " match" + (n === 1 ? "" : "es") + (n >= MAX ? " (stopped at " + MAX + ")" : "") : "> no matches";
+    r.list.slice(0, 50).forEach(function (m, i) {
+      var li = document.createElement("li");
+      var h = '<span class="idx">#' + (i + 1) + '</span><span class="accent">' + (m[0] === "" ? "∅ (empty)" : esc(JSON.stringify(m[0]))) + "</span>";
+      var names = {};
+      if (m.groups) Object.keys(m.groups).forEach(function (k) { names[k] = true; });
+      for (var g = 1; g < m.length; g++) {
+        h += '<span class="grp">$' + g + "=<b>" + (m[g] === undefined ? "∅" : esc(JSON.stringify(m[g]))) + "</b></span>";
+      }
+      Object.keys(names).forEach(function (k) {
+        h += '<span class="grp">' + esc(k) + "=<b>" + (m.groups[k] === undefined ? "∅" : esc(JSON.stringify(m.groups[k]))) + "</b></span>";
+      });
+      li.innerHTML = h;
+      matchesEl.appendChild(li);
+    });
+  }
+
+  function load(p, f, s) {
+    rx.value = p;
+    chips.forEach(function (c) { c.setAttribute("aria-pressed", f.indexOf(c.getAttribute("data-flag")) >= 0 ? "true" : "false"); });
+    sample.value = s;
+    update();
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      document.querySelector(".console-col").scrollIntoView({ block: "start" });
+    }
+    rx.focus({ preventScroll: true });
+  }
+
+  chips.forEach(function (c) {
+    c.addEventListener("click", function () {
+      c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      update();
+    });
+  });
+  rx.addEventListener("input", update);
+  sample.addEventListener("input", update);
+  update();
+
+  /* ---------- Search ---------- */
+  var q = document.getElementById("q"), empty = document.getElementById("empty");
+  var sections = Array.prototype.slice.call(document.querySelectorAll("section.sheet"));
+  function filter() {
+    var term = q.value.trim().toLowerCase(), any = false;
+    sections.forEach(function (sec) {
+      var title = sec.querySelector("h3").textContent.toLowerCase();
+      var secHit = term && title.indexOf(term) >= 0;
+      var items = sec.querySelectorAll(".entry, .note, tbody tr");
+      var shown = 0;
+      Array.prototype.forEach.call(items, function (it) {
+        var hay = (it.textContent + " " + (it.getAttribute("data-k") || "")).toLowerCase();
+        var ok = !term || secHit || hay.indexOf(term) >= 0;
+        it.hidden = !ok;
+        if (ok) shown++;
+      });
+      sec.hidden = shown === 0;
+      if (shown) any = true;
+    });
+    empty.classList.toggle("on", !any);
+  }
+  q.addEventListener("input", filter);
+  document.addEventListener("keydown", function (e) {
+    var tag = (document.activeElement && document.activeElement.tagName) || "";
+    if (e.key === "/" && tag !== "INPUT" && tag !== "TEXTAREA") { e.preventDefault(); q.focus(); }
+    if (e.key === "Escape" && document.activeElement === q) { q.value = ""; filter(); }
+  });
+})();
+</script>
+</body>
+</html>

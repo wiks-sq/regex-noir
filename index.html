@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Noir // Interactive Regular Expression Mystery Game</title>
+  <meta name="description" content="Master Regular Expressions through interactive cyber-noir cases. Practice Regex pattern matching, capture groups, and lookaheads in a fun, browser-based puzzle game.">
+  <meta name="keywords" content="regex game, learn regex, regular expressions puzzle, regex interactive tutorial, regex regex noir, developer games">
+  <meta name="author" content="Regex Noir Team">
+  <meta name="theme-color" content="#ebe2d0">
+  <link rel="canonical" href="https://wiks-sq.github.io/regex-noir/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wiks-sq.github.io/regex-noir/">
+  <meta property="og:title" content="Regex Noir // Interactive Regular Expression Game">
+  <meta property="og:description" content="Solve cyber-investigation cases using Regular Expressions. Free interactive puzzle game for developers and analysts.">
+  <meta property="og:image" content="https://wiks-sq.github.io/regex-noir/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Regex Noir: Signal &amp; Cipher, an interactive regex game. A regex console highlights PHANTOM log entries.">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Regex Noir // Interactive Regex Game">
+  <meta property="twitter:description" content="Solve cyber cases with Regex. Master patterns, quantifiers, and lookaheads.">
+  <meta property="twitter:image" content="https://wiks-sq.github.io/regex-noir/og-image.png">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["SoftwareApplication", "VideoGame"],
+    "name": "Regex Noir",
+    "alternateName": "Regex Noir: Signal & Cipher",
+    "operatingSystem": "All",
+    "applicationCategory": "EducationalGame",
+    "genre": ["Puzzle", "Educational"],
+    "educationalUse": "Practice",
+    "teaches": "Regular Expressions",
+    "isAccessibleForFree": true,
+    "url": "https://wiks-sq.github.io/regex-noir/",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
+    },
+    "description": "An interactive cyber-noir investigation game designed to teach Regular Expressions through practical puzzle solving."
+  }
+  </script>
+
+  <!-- Favicons: the inline SVG keeps index.html self-contained; the files cover older browsers, iOS and installs -->
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231f6f68%22/%3E%3Ccircle cx=%2220%22 cy=%2245%22 r=%227%22 fill=%22%23fbf7ef%22/%3E%3Cg stroke=%22%23fbf7ef%22 stroke-width=%227.5%22 stroke-linecap=%22round%22 transform=%22translate(40 26)%22%3E%3Cline x1=%220%22 y1=%22-14%22 x2=%220%22 y2=%2214%22/%3E%3Cline x1=%220%22 y1=%22-14%22 x2=%220%22 y2=%2214%22 transform=%22rotate(60)%22/%3E%3Cline x1=%220%22 y1=%22-14%22 x2=%220%22 y2=%2214%22 transform=%22rotate(120)%22/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <!-- React & Babel CDNs (pinned versions) -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+            sans: ['"Space Grotesk"', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* ---------- Theme tokens ---------- */
+    /* Cream (default) — 60/30/10:
+       60% dominant  : cream page + card surfaces (--bg, --panel)
+       30% secondary : warm sand for header, footer, inputs, feeds, inner cards (--secondary, --bg2, --panel2)
+       10% accent    : deep teal for buttons, active states, highlights (--accent) */
+    :root, [data-theme="light"] {
+      --bg: #f8f3e8;
+      --panel: #fbf7ef;
+      --secondary: #ebe2d0;
+      --bg2: #f1e9da;
+      --panel2: #efe6d5;
+      --border: #ddd1bb;
+      --text: #2d2a24;
+      --muted: #776d5f;
+      --accent: #1f6f68;
+      --accent2: #2d2a24;
+      --on-accent: #ffffff;
+      --warn: #9a6516;
+      --ok: #3f7a3a;
+      --err: #b3412f;
+      --mark-bg: #cfe6e1;
+      --mark-text: #1b3d39;
+      --group-bg: #1f6f68;
+      --group-text: #ffffff;
+      --glow: 0 0 0 3px rgba(31, 111, 104, .18);
+      --glow2: 0 0 0 3px rgba(45, 42, 36, .15);
+      --coffee: #1f6f68;
+      --coffee-text: #ffffff;
+    }
+    /* High contrast: black on cream, same 60/30/10 split */
+    [data-theme="contrast"] {
+      --bg: #fbf6ea;
+      --panel: #fbf6ea;
+      --secondary: #efe6d2;
+      --bg2: #fbf6ea;
+      --panel2: #f4ecdb;
+      --border: #000000;
+      --text: #000000;
+      --muted: #333333;
+      --accent: #00524c;
+      --accent2: #000000;
+      --on-accent: #ffffff;
+      --warn: #6b3d00;
+      --ok: #1f5a1b;
+      --err: #9a1c0c;
+      --mark-bg: #ffe14d;
+      --mark-text: #000000;
+      --group-bg: #000000;
+      --group-text: #ffffff;
+      --glow: 0 0 0 2px #000000;
+      --glow2: 0 0 0 2px #000000;
+      --coffee: #00524c;
+      --coffee-text: #ffffff;
+    }
+
+    html, body { background: var(--bg); color: var(--text); }
+    body {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Hide scrollbars everywhere (scrolling still works) */
+    * { scrollbar-width: none; -ms-overflow-style: none; }
+    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; }
+    .panel2 { background: var(--panel2); border: 1px solid var(--border); border-radius: 10px; }
+    .muted { color: var(--muted); }
+    .accent { color: var(--accent); }
+    .accent2 { color: var(--accent2); }
+    .ok { color: var(--ok); }
+    .err { color: var(--err); }
+    .warn { color: var(--warn); }
+    .label { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .glow-text { }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+      font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500;
+      padding: .55rem .9rem; border-radius: 9px; border: 1px solid var(--border);
+      background: var(--panel2); color: var(--text); cursor: pointer;
+      transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover:not(:disabled) { border-color: var(--accent); box-shadow: var(--glow); }
+    .btn:active:not(:disabled) { transform: translateY(1px); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn:focus-visible, .chip:focus-visible, .casebtn:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .btn-primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 700; }
+    .btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
+    .btn-hot { background: transparent; color: var(--accent2); border-color: var(--accent2); font-weight: 700; }
+    .btn-hot:hover:not(:disabled) { background: var(--accent2); color: var(--on-accent); box-shadow: var(--glow2); border-color: var(--accent2); }
+    .btn-danger:hover:not(:disabled) { border-color: var(--err); color: var(--err); box-shadow: none; }
+
+    .coffee-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--coffee); color: var(--coffee-text);
+      font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 14px;
+      padding: .55rem 1rem; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 1px 2px rgba(45, 42, 36, .15);
+      transition: transform .18s ease, box-shadow .18s ease;
+      white-space: nowrap;
+    }
+    .coffee-btn:hover { transform: translateY(-2px) rotate(-1deg); box-shadow: 0 4px 12px rgba(31, 111, 104, .25); }
+    .coffee-btn .cup { display: inline-block; transition: transform .3s ease; }
+    .coffee-btn:hover .cup { transform: rotate(-14deg) scale(1.15); }
+    .coffee-btn .steam { opacity: 0; transition: opacity .2s; }
+    .coffee-btn:hover .steam { opacity: 1; animation: steam 1.2s ease-in-out infinite; }
+    @keyframes steam { 0% { transform: translateY(0); opacity: .9 } 100% { transform: translateY(-6px); opacity: 0 } }
+
+    .chip {
+      font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700;
+      width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--panel2); color: var(--muted); cursor: pointer; transition: all .15s;
+    }
+    .chip.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); box-shadow: var(--glow); }
+
+    .casebtn {
+      position: relative; flex: 0 0 auto;
+      font-family: "JetBrains Mono", monospace; font-size: 12px;
+      min-width: 54px; padding: .45rem .55rem; border-radius: 9px;
+      border: 1px solid var(--border); background: var(--panel2); color: var(--muted);
+      cursor: pointer; transition: all .15s; text-align: center;
+    }
+    .casebtn:hover:not(:disabled) { color: var(--text); border-color: var(--accent); }
+    .casebtn.active { color: var(--accent); border-color: var(--accent); box-shadow: var(--glow); }
+    .casebtn.solved { color: var(--ok); }
+    .casebtn.solved::after { content: "✓"; position: absolute; top: -7px; right: -5px; font-size: 10px; background: var(--ok); color: var(--on-accent); border-radius: 99px; width: 15px; height: 15px; line-height: 15px; }
+    .casebtn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* Regex input */
+    .regex-wrap {
+      display: flex; align-items: center; gap: .25rem;
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+      padding: .25rem .6rem; font-family: "JetBrains Mono", monospace;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .regex-wrap:focus-within { border-color: var(--accent); box-shadow: var(--glow); }
+    .regex-wrap.bad { border-color: var(--err); box-shadow: 0 0 0 3px rgba(220, 38, 38, .15); }
+    .regex-wrap input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--text); font-size: 16px; padding: .55rem .2rem; font-family: inherit; }
+    .regex-wrap .slash { color: var(--accent2); font-size: 18px; font-weight: 700; }
+
+    /* Data feed */
+    .feed { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; max-height: 340px; overflow: auto; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.7; }
+    .feed-inner { display: flex; min-width: max-content; }
+    .gutter { user-select: none; text-align: right; padding: .75rem .6rem; color: var(--muted); opacity: .55; border-right: 1px solid var(--border); position: sticky; left: 0; background: var(--bg2); }
+    .feed pre { margin: 0; padding: .75rem .9rem; white-space: pre; font-family: inherit; color: var(--text); }
+    mark.hit { background: var(--mark-bg); color: var(--mark-text); border-radius: 3px; padding: 1px 0; }
+    mark.hit.alt { filter: brightness(.94); }
+    mark.grp { background: var(--group-bg); color: var(--group-text); border-radius: 2px; box-shadow: none; padding: 1px 0; font-weight: 700; }
+    .zero { display: inline-block; width: 2px; height: 1.1em; vertical-align: text-bottom; background: var(--warn); margin: 0 -1px; animation: blink 1s steps(2) infinite; }
+    .nl-hit { background: var(--mark-bg); color: var(--mark-text); opacity: .7; border-radius: 2px; font-size: 10px; padding: 0 2px; }
+    @keyframes blink { 50% { opacity: 0 } }
+
+    .console { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
+    .console-log { max-height: 190px; overflow: auto; }
+
+    .kbd { font-family: "JetBrains Mono", monospace; font-size: 11px; border: 1px solid var(--border); border-bottom-width: 2px; padding: 0 .35rem; border-radius: 5px; color: var(--muted); }
+
+    .tok { font-family: "JetBrains Mono", monospace; color: var(--accent); background: var(--panel2); border: 1px solid var(--border); padding: 0 .35rem; border-radius: 5px; white-space: pre; }
+
+    .modal-back { position: fixed; inset: 0; background: rgba(45, 42, 36, .35); backdrop-filter: blur(2px); z-index: 70; display: flex; align-items: center; justify-content: center; padding: 16px; animation: fade .2s ease; }
+    .modal { max-height: calc(100vh - 32px); overflow: auto; width: 100%; animation: pop .25s cubic-bezier(.2, 1.3, .5, 1); }
+    @keyframes fade { from { opacity: 0 } }
+    @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.97) } }
+
+    .shake { animation: shake .4s; }
+    @keyframes shake { 20%, 60% { transform: translateX(-6px) } 40%, 80% { transform: translateX(6px) } }
+
+    .stamp { display: inline-block; border: 3px solid var(--ok); color: var(--ok); font-family: "JetBrains Mono", monospace; font-weight: 700; letter-spacing: .2em; padding: .3rem .9rem; transform: rotate(-4deg); border-radius: 6px; }
+
+    .scroll-x { overflow-x: auto; }
+
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] .chev { transform: rotate(90deg); }
+    .chev { transition: transform .15s; display: inline-block; }
+
+    .progress-bar { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .progress-bar > div { height: 100%; background: var(--accent); transition: width .5s ease; }
+
+    .badge { display: inline-flex; align-items: center; gap: .35rem; font-family: "JetBrains Mono", monospace; font-size: 11px; padding: .25rem .55rem; border-radius: 99px; border: 1px solid var(--border); color: var(--muted); }
+    .badge.earned { color: var(--warn); border-color: var(--warn); background: rgba(180, 83, 9, .06); }
+
+    .boot { font-family: "JetBrains Mono", monospace; color: #1f6f68; padding: 40px 16px; text-align: center; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <noscript>
+    <div style="padding:24px;font-family:monospace;color:#1f6f68;background:#f8f3e8">
+      Regex Noir requires JavaScript to run. Please enable it to start your investigation.
+    </div>
+  </noscript>
+  <div id="root"><div class="boot">&gt; establishing secure uplink<span class="zero"></span></div></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+/* =====================================================================
+   CONFIG
+   ===================================================================== */
+const BMC_URL = "https://buymeacoffee.com/YOUR_USERNAME"; // <-- set your Buy Me a Coffee username here
+const STORAGE_KEY = "regexNoir.v1";
+const MAX_MATCHES = 2000;
+
+/* =====================================================================
+   CASE DATA
+   Each case follows the schema from the spec, plus a few extras:
+   - lines        : array of target-text lines (joined into targetText)
+   - matchMode    : "full" (compare match[0]) or "group" (compare capture group 1)
+   - startFlags   : flags toggled on when the case opens
+   - objectives   : bullet list shown in the dossier
+   - cheats       : [token, description] pairs for the cheat sheet
+   - officer      : briefing officer note
+   - timeLimit    : (seconds) optional par time for a speed bonus
+   ===================================================================== */
+/*CASES_START*/
+const CASES = [
+  {
+    id: "case-01",
+    title: "Operation: Phantom Ping",
+    chapter: "Character Classes & Literals",
+    difficulty: "Novice",
+    briefing: "Rogue nodes are sending unauthorized pings across the grid. We need to isolate all occurrences of the keyword 'PHANTOM' followed by any 3 digits.",
+    officer: { name: "Sgt. Okafor", note: "Rookie, start simple. Letters in a pattern match themselves. A backslash-d stands in for any single digit. Ignore the ERR line — it's a decoy." },
+    objectives: [
+      "Match every PHANTOM_ tag that ends in exactly three digits.",
+      "Do not match the corrupted PHANTOM_ERR record.",
+    ],
+    lines: [
+      "LOG 08:00: NORMAL_PING_101",
+      "LOG 08:01: PHANTOM_942 DETECTED",
+      "LOG 08:02: NORMAL_PING_102",
+      "LOG 08:05: PHANTOM_108 DETECTED",
+      "LOG 08:09: PHANTOM_ERR DETECTED",
+    ],
+    solutionPattern: String.raw`PHANTOM_\d{3}`,
+    flags: "g",
+    startFlags: "g",
+    matchMode: "full",
+    expectedMatches: ["PHANTOM_942", "PHANTOM_108"],
+    hint: "Use \\d to match single digits and {3} to specify exactly three occurrences.",
+    conceptUnlocked: "Digits (\\d) & Quantifiers ({n})",
+    cheats: [
+      ["abc", "Literal characters match themselves exactly"],
+      ["\\d", "Any digit 0–9"],
+      ["\\w", "Any word character: letter, digit or _"],
+      ["\\s", "Any whitespace (space, tab, newline)"],
+      ["{3}", "Exactly 3 of the previous token"],
+      ["g flag", "Global — find every match, not just the first"],
+    ],
+  },
+  {
+    id: "case-02",
+    title: "The Counterfeit Serials",
+    chapter: "Wildcards & Quantifiers",
+    difficulty: "Novice",
+    briefing: "A smuggling ring is flooding Dock Bay with cloned hardware. Genuine units carry the tag SN, one separator character of any kind, and at least two digits. Forgeries skimp on the digits or double up separators.",
+    officer: { name: "Sgt. Okafor", note: "The dot is a wildcard — it matches any single character except a newline. Pair it with a quantifier like {2,} and you can say \"two or more\"." },
+    objectives: [
+      "Match SN + any ONE separator + two or more digits.",
+      "Reject SN-7 (too few digits), SN--12 (double separator) and SNX.",
+      "Match only the serial itself — not the status text.",
+    ],
+    lines: [
+      "[BAY-01] SN-4471   status=GREEN",
+      "[BAY-02] SN#88     status=GREEN",
+      "[BAY-03] SN-7      status=FAULT",
+      "[BAY-04] SN.3310   status=GREEN",
+      "[BAY-05] SN--12    status=FAULT",
+      "[BAY-06] SN:90215  status=GREEN",
+      "[BAY-07] SNX       status=NULL",
+    ],
+    solutionPattern: String.raw`SN.\d{2,}`,
+    flags: "g",
+    startFlags: "g",
+    matchMode: "full",
+    expectedMatches: ["SN-4471", "SN#88", "SN.3310", "SN:90215"],
+    hint: "Start with SN, add a single dot for the separator, then \\d{2,} for two-or-more digits. \\d+ alone would also let SN-7 through.",
+    conceptUnlocked: "Wildcard (.) & Range Quantifiers ({n,})",
+    cheats: [
+      [".", "Any single character except newline"],
+      ["*", "0 or more of the previous token"],
+      ["+", "1 or more of the previous token"],
+      ["?", "0 or 1 (optional)"],
+      ["{2,}", "2 or more"],
+      ["{2,4}", "Between 2 and 4"],
+      ["\\.", "A literal dot (escaped)"],
+    ],
+  },
+  {
+    id: "case-03",
+    title: "Signatures in the Static",
+    chapter: "Anchors & Word Boundaries",
+    difficulty: "Apprentice",
+    briefing: "Our relay recorded a handshake session riddled with echoes. Real signature headers start a line with the standalone word SIG. Echoes appear mid-line, and lookalikes such as SIGNAL or SIG_DEBUG must be thrown out. Pull each genuine header line in full.",
+    officer: { name: "Insp. Varga", note: "^ and $ pin you to the start and end. By default they mean the whole text — flip on the m flag so they mean each line. \\b marks the edge of a word." },
+    objectives: [
+      "Match entire lines that begin with the standalone word SIG.",
+      "Ignore SIGNAL, SIG_DEBUG and the forwarded mid-line echo.",
+      "Each match must run from the start of the line to its end.",
+    ],
+    lines: [
+      "SIG alpha-7 handshake",
+      "SIGNAL boost requested",
+      "relay SIG beta-2 forwarded",
+      "SIG omega-9 handshake",
+      "SIG_DEBUG trace enabled",
+      "SIG",
+      "  SIG gamma-1 malformed",
+    ],
+    solutionPattern: String.raw`^SIG\b.*$`,
+    flags: "gm",
+    startFlags: "g",
+    matchMode: "full",
+    expectedMatches: ["SIG alpha-7 handshake", "SIG omega-9 handshake", "SIG"],
+    hint: "Try ^SIG\\b.*$ — and enable the m (multiline) flag, otherwise ^ only matches the very first character of the log.",
+    conceptUnlocked: "Anchors (^ $), Multiline (m) & Boundaries (\\b)",
+    cheats: [
+      ["^", "Start of text (or of each line with m)"],
+      ["$", "End of text (or of each line with m)"],
+      ["\\b", "Word boundary — between \\w and non-\\w"],
+      ["\\B", "Not a word boundary"],
+      [".*", "Anything (greedy) up to the line end"],
+      ["m flag", "Multiline: ^ and $ work per line"],
+    ],
+  },
+  {
+    id: "case-04",
+    title: "Hash Ledger Audit",
+    chapter: "Character Sets & Ranges",
+    difficulty: "Apprentice",
+    briefing: "The Cinder Bank ledger has been tampered with. Valid transaction hashes are exactly eight lowercase hexadecimal characters (0–9, a–f). Anything longer, shorter, uppercase or containing non-hex letters is a forgery.",
+    officer: { name: "Insp. Varga", note: "Square brackets build a custom alphabet. [a-f0-9] means one character from that set. Wrap the whole thing in word boundaries so you don't grab a slice of a longer string." },
+    objectives: [
+      "Match only the hash values that are exactly 8 lowercase hex characters.",
+      "Reject the 9-character hash, the uppercase hash and anything containing g–z.",
+    ],
+    lines: [
+      "tx#001 hash=3fa9c01b  verdict=ok",
+      "tx#002 hash=zz19ab0c  verdict=bad",
+      "tx#003 hash=0011aaff  verdict=ok",
+      "tx#004 hash=12ab34cd5 verdict=bad",
+      "tx#005 hash=A1B2C3D4  verdict=bad",
+      "tx#006 hash=deadbeef  verdict=ok",
+      "tx#007 hash=9g8f7e6d  verdict=bad",
+    ],
+    solutionPattern: String.raw`\b[a-f0-9]{8}\b`,
+    flags: "g",
+    startFlags: "g",
+    matchMode: "full",
+    expectedMatches: ["3fa9c01b", "0011aaff", "deadbeef"],
+    hint: "A set like [a-f0-9] followed by {8}, surrounded by \\b on both sides. Leave the i flag OFF — uppercase hashes are forgeries.",
+    conceptUnlocked: "Character Sets ([...]) & Ranges (a-z)",
+    cheats: [
+      ["[abc]", "One of a, b or c"],
+      ["[a-z]", "Any lowercase letter (range)"],
+      ["[A-Za-z0-9]", "Combine several ranges"],
+      ["[0-9]", "Same as \\d"],
+      ["\\b...\\b", "Whole-word only"],
+      ["i flag", "Case-insensitive (beware!)"],
+    ],
+  },
+  {
+    id: "case-05",
+    title: "Noise on the Wire",
+    chapter: "Negated Sets",
+    difficulty: "Agent",
+    briefing: "An informant's burst transmission was buried in line noise. The real codenames are wrapped in angle brackets <LIKE THIS>, sometimes several per line. A greedy wildcard will swallow everything between the first < and the last > — you need to stop at the first closing bracket.",
+    officer: { name: "Dr. Imani Rook", note: "A caret INSIDE brackets flips the set: [^>] means any character that is NOT a >. That's your scalpel for cutting out exactly one bracketed word." },
+    objectives: [
+      "Match each bracketed codename, brackets included: <NIGHTJAR>, etc.",
+      "Each match must contain exactly one codename.",
+      "The empty pair <> carries no data — don't match it.",
+    ],
+    lines: [
+      "#!~<NIGHTJAR>@@%%<CROSSWIND>~~##",
+      "!!<VESSEL-12>&&*<IRON HALO>^^",
+      "~~~~~<NULL>~~<>~~%%%%",
+      "$$<CINDER QUEEN>!?!?",
+    ],
+    solutionPattern: String.raw`<[^>]+>`,
+    flags: "g",
+    startFlags: "g",
+    matchMode: "full",
+    expectedMatches: ["<NIGHTJAR>", "<CROSSWIND>", "<VESSEL-12>", "<IRON HALO>", "<NULL>", "<CINDER QUEEN>"],
+    hint: "Match <, then one-or-more characters that are not >, then >: <[^>]+>",
+    conceptUnlocked: "Negated Sets ([^...])",
+    cheats: [
+      ["[^>]", "Any char that is NOT >"],
+      ["[^0-9]", "Any non-digit (same as \\D)"],
+      ["[^\\s]", "Any non-whitespace (same as \\S)"],
+      ["+", "One or more"],
+      [".*", "Greedy — grabs as much as possible"],
+    ],
+  },
+  {
+    id: "case-06",
+    title: "Echo Chamber",
+    chapter: "Capture Groups & Backreferences",
+    difficulty: "Agent",
+    briefing: "Someone is replaying packets to mask an intrusion: the same packet ID appears twice in a row on the stream. Flag every back-to-back duplicate pair. Watch for near-misses like 0x9 0x99 and differing case like 0xC3 0xc3.",
+    officer: { name: "Dr. Imani Rook", note: "Parentheses remember what they matched. \\1 says \"the exact same text as group 1, again\". Boundaries keep 0x9 from echoing inside 0x99." },
+    objectives: [
+      "Match each pair of identical, adjacent packet IDs (e.g. \"0xB2 0xB2\").",
+      "Do not match 0x9 0x99 (prefix only) or 0xC3 0xc3 (case differs).",
+    ],
+    lines: [
+      "PKT-STREAM 0xA1 0xB2 0xB2 0xC3 0xc3 0xD4",
+      "PKT-STREAM 0x9 0x99 0xE5 0xE5 0xF6",
+      "PKT-STREAM 0x7C 0x7C 0x10 0x11 0x11",
+    ],
+    solutionPattern: String.raw`\b(\w+) \1\b`,
+    flags: "g",
+    startFlags: "g",
+    matchMode: "full",
+    expectedMatches: ["0xB2 0xB2", "0xE5 0xE5", "0x7C 0x7C", "0x11 0x11"],
+    hint: "Capture a word with (\\w+), then a space, then \\1 to repeat it. Add \\b at both ends: \\b(\\w+) \\1\\b",
+    conceptUnlocked: "Capture Groups (...) & Backreferences (\\1)",
+    cheats: [
+      ["(abc)", "Capture group #1"],
+      ["\\1", "Backreference: same text as group 1"],
+      ["\\2", "Same text as group 2, etc."],
+      ["(\\w+)", "Capture one word"],
+      ["\\b", "Word boundary"],
+    ],
+  },
+  {
+    id: "case-07",
+    title: "Fault Lines",
+    chapter: "Optionality & Alternation",
+    difficulty: "Operative",
+    briefing: "The Vault Grid's gateway is leaking. Find every GET or POST request over http or https that came back with an error status (4xx or 5xx). Ignore other methods, other protocols, the fake 'httpx' scheme and any success or redirect codes.",
+    officer: { name: "Cmdr. Halloran", note: "A ? makes the token before it optional — https? covers both protocols. A pipe means OR, and parentheses keep the OR from leaking across the whole pattern." },
+    objectives: [
+      "Match method, URL and status: e.g. \"GET https://vault.grid/keys 403\".",
+      "Method must be GET or POST; protocol http or https.",
+      "Status must be 4xx or 5xx.",
+    ],
+    lines: [
+      "GET http://relay.grid/ping 200",
+      "GET https://vault.grid/keys 403",
+      "PUT https://vault.grid/keys 500",
+      "POST https://vault.grid/auth 500",
+      "GET ftp://old.grid/dump 404",
+      "GET httpx://fake.grid/x 404",
+      "GET http://relay.grid/ping 404",
+      "POST http://relay.grid/beacon 302",
+    ],
+    solutionPattern: String.raw`(GET|POST) https?://\S+ [45]\d\d`,
+    flags: "g",
+    startFlags: "g",
+    matchMode: "full",
+    expectedMatches: ["GET https://vault.grid/keys 403", "POST https://vault.grid/auth 500", "GET http://relay.grid/ping 404"],
+    hint: "(GET|POST) for the method, https? for the protocol, \\S+ for the rest of the URL, then [45]\\d\\d for the status.",
+    conceptUnlocked: "Optional (?) & Alternation (|)",
+    cheats: [
+      ["s?", "Optional 's'"],
+      ["a|b", "a OR b"],
+      ["(GET|POST)", "Group the alternatives"],
+      ["\\S+", "One or more non-space chars"],
+      ["[45]", "4 or 5"],
+      ["\\/", "Literal slash (optional escape in JS)"],
+    ],
+  },
+  {
+    id: "case-08",
+    title: "The Dossier Dump",
+    chapter: "Non-Capturing Groups & Lazy Matching",
+    difficulty: "Operative",
+    briefing: "We intercepted a compact JSON export of a field agent roster. Extract only the string VALUES. The evidence locker accepts capture group 1 — so group 1 must contain the value and nothing else. The key name must be matched, but not captured.",
+    officer: { name: "Cmdr. Halloran", note: "(?:...) groups without capturing, so it won't steal slot #1. And .*? is lazy — it stops at the first closing quote instead of racing to the last one on the line." },
+    objectives: [
+      "Capture each string value into group 1 (e.g. VESPER, black, 7G).",
+      "Skip numeric and boolean values such as 4 and true.",
+      "Group 1 must be the value — keys may be matched but not captured.",
+    ],
+    lines: [
+      '{"agent":"VESPER","clearance":"black","sector":"7G","level":4}',
+      '{"agent":"MOTH","clearance":"grey","active":true,"sector":"12A"}',
+    ],
+    solutionPattern: String.raw`"(?:\w+)":"(.*?)"`,
+    flags: "g",
+    startFlags: "g",
+    matchMode: "group",
+    expectedMatches: ["VESPER", "black", "7G", "MOTH", "grey", "12A"],
+    hint: "Match the key with \"(?:\\w+)\" (non-capturing), then :\" and capture lazily with (.*?) up to the next \".",
+    conceptUnlocked: "Non-Capturing Groups (?:) & Lazy Quantifiers (*?)",
+    cheats: [
+      ["(?:...)", "Group without capturing"],
+      [".*?", "Lazy: as few chars as possible"],
+      ["+?", "Lazy one-or-more"],
+      ["\"", "A literal double quote"],
+      ["(...)", "Capturing group → evidence slot #1"],
+    ],
+  },
+  {
+    id: "case-09",
+    title: "Keys to the Kingdom",
+    chapter: "Positive & Negative Lookaheads",
+    difficulty: "Specialist",
+    briefing: "A credential dump from the Corvid syndicate. We only care about tokens strong enough to be real vault keys: at least 8 characters, at least one digit, at least one uppercase letter, and they must NOT contain the lowercase string \"pass\" anywhere. Match each qualifying token line in full.",
+    officer: { name: "Director Sable", note: "Lookaheads check conditions without consuming characters. Stack them at the start of a line: (?=.*\\d) demands a digit, (?!.*pass) forbids a word. Then match the line itself." },
+    objectives: [
+      "Match whole lines (one token per line) that satisfy ALL rules:",
+      "≥ 8 characters · contains a digit · contains an uppercase letter.",
+      "Must NOT contain \"pass\" (lowercase).",
+    ],
+    lines: [
+      "Tr0ub4dor",
+      "hunter22",
+      "NightOwl7",
+      "password9X",
+      "Sh0rt",
+      "VAULTKEY42",
+      "bypassME99",
+      "qu!etStorm8",
+      "CORVUS-NINE",
+    ],
+    solutionPattern: String.raw`^(?=.*\d)(?=.*[A-Z])(?!.*pass).{8,}$`,
+    flags: "gm",
+    startFlags: "gm",
+    matchMode: "full",
+    expectedMatches: ["Tr0ub4dor", "NightOwl7", "VAULTKEY42", "qu!etStorm8"],
+    hint: "^(?=.*\\d)(?=.*[A-Z])(?!.*pass).{8,}$ with the g and m flags.",
+    conceptUnlocked: "Lookaheads (?=...) & (?!...)",
+    cheats: [
+      ["(?=X)", "Positive lookahead: X must follow"],
+      ["(?!X)", "Negative lookahead: X must NOT follow"],
+      ["(?=.*\\d)", "Somewhere ahead there's a digit"],
+      ["(?<=X)", "Lookbehind: X must precede"],
+      [".{8,}", "At least 8 characters"],
+      ["^...$", "Whole line (with m flag)"],
+    ],
+  },
+  {
+    id: "case-10",
+    title: "Night Shift at Meridian",
+    chapter: "Master Case",
+    difficulty: "Master",
+    briefing: "Meridian Data Center was breached overnight. The access log is a mess of benign traffic and decoys. Identify the source IP of every FAILED request (status 401 or 403) logged between 02:00:00 and 04:59:59. Submit the IPs as capture group 1 — one entry per offending request, duplicates included. The clock is running.",
+    officer: { name: "Director Sable", note: "Everything you've learned, at once. Anchor to the line, capture the IP, and pin the hour precisely — an hour of 12 is not an hour of 02. A status code inside a URL is not a status code. Finish under par time for a bonus." },
+    objectives: [
+      "Capture the source IP (group 1) of each request with status 401 or 403.",
+      "Only include requests timestamped 02:00:00 – 04:59:59.",
+      "Watch for decoys: a 401 inside a URL, and an hour of 12.",
+      "Par time: 5 minutes. Shorter patterns earn an efficiency bonus.",
+    ],
+    lines: [
+      '198.51.100.23 - - [12/Nov/2026:01:58:44] "GET /admin HTTP/1.1" 401 233',
+      '203.0.113.7 - - [12/Nov/2026:02:14:09] "POST /api/login HTTP/1.1" 401 512',
+      '192.0.2.144 - - [12/Nov/2026:02:31:50] "GET /vault/keys HTTP/1.1" 200 1024',
+      '10.13.37.5 - - [12/Nov/2026:03:02:11] "GET /vault/keys HTTP/1.1" 403 128',
+      '192.0.2.144 - - [12/Nov/2026:04:12:37] "GET /status?code=401 HTTP/1.1" 200 9',
+      '10.0.0.8 - - [12/Nov/2026:12:03:15] "GET /index HTTP/1.1" 401 88',
+      '203.0.113.7 - - [12/Nov/2026:03:45:00] "POST /api/login HTTP/1.1" 401 512',
+      '172.16.4.201 - - [12/Nov/2026:04:59:59] "DELETE /logs HTTP/1.1" 403 64',
+      '198.51.100.23 - - [12/Nov/2026:05:00:01] "GET /admin HTTP/1.1" 403 233',
+      '192.0.2.77 - - [12/Nov/2026:02:40:18] "GET /vault HTTP/1.1" 404 51',
+    ],
+    solutionPattern: String.raw`^([\d.]+) - - \[[^:]+:0[2-4]:[^"]+"[^"]*" 40[13]\b`,
+    flags: "gm",
+    startFlags: "gm",
+    matchMode: "group",
+    expectedMatches: ["203.0.113.7", "10.13.37.5", "203.0.113.7", "172.16.4.201"],
+    hint: "Capture the IP with ^([\\d.]+), skip the date with \\[[^:]+: , require the hour :0[2-4]: , skip to the quoted request with [^\"]+\"[^\"]*\" and finish with 40[13]\\b.",
+    conceptUnlocked: "Master Cryptanalyst — full pattern composition",
+    timeLimit: 300,
+    cheats: [
+      ["^(...)", "Capture from line start"],
+      ["[\\d.]+", "Digits and dots (an IPv4-ish run)"],
+      ["\\[", "Literal ["],
+      ["[^:]+", "Skip ahead to the next colon"],
+      ["0[2-4]", "Hours 02, 03 or 04"],
+      ["\"[^\"]*\"", "One quoted string"],
+      ["40[13]", "401 or 403"],
+    ],
+  },
+];
+/*CASES_END*/
+CASES.forEach((c) => { c.targetText = c.lines.join("\n"); });
+
+const BADGES = [
+  { id: "first", icon: "◉", name: "First Contact", desc: "Close your first case", test: (p) => solvedCount(p) >= 1 },
+  { id: "clean", icon: "✦", name: "Clean Hands", desc: "Close a case without hints", test: (p) => Object.values(p.solved).some((s) => !s.hintUsed && !s.revealed) },
+  { id: "lean", icon: "⚡", name: "Lean Code", desc: "Beat a reference pattern's length", test: (p) => Object.values(p.solved).some((s) => s.efficient) },
+  { id: "flawless", icon: "◆", name: "Flawless", desc: "Close a case on the first submission", test: (p) => Object.values(p.solved).some((s) => s.failed === 0) },
+  { id: "field", icon: "✪", name: "Field Agent", desc: "Close 5 cases", test: (p) => solvedCount(p) >= 5 },
+  { id: "clock", icon: "⏱", name: "Beat the Clock", desc: "Close the Master Case under par", test: (p) => !!(p.solved["case-10"] && p.solved["case-10"].underPar) },
+  { id: "master", icon: "♛", name: "Master Cryptanalyst", desc: "Close all 10 cases — unlocks the final badge", test: (p) => solvedCount(p) >= CASES.length },
+];
+
+/* =====================================================================
+   PERSISTENCE
+   ===================================================================== */
+const DEFAULT_PROGRESS = { solved: {}, sessions: {}, drafts: {}, current: 0, settings: { sound: true, theme: "light" } };
+const THEMES = { light: "Cream", contrast: "High Contrast" };
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return structuredClone(DEFAULT_PROGRESS);
+    const p = JSON.parse(raw);
+    return {
+      ...structuredClone(DEFAULT_PROGRESS), ...p,
+      settings: { ...DEFAULT_PROGRESS.settings, ...(p.settings || {}), ...(THEMES[(p.settings || {}).theme] ? {} : { theme: "light" }) },
+      solved: p.solved || {}, sessions: p.sessions || {}, drafts: p.drafts || {},
+    };
+  } catch (e) {
+    return structuredClone(DEFAULT_PROGRESS);
+  }
+}
+function saveProgress(p) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch (e) { /* storage unavailable — play on without saving */ }
+}
+function solvedCount(p) { return CASES.filter((c) => p.solved[c.id]).length; }
+function isUnlocked(p, idx) { return idx === 0 || !!p.solved[CASES[idx - 1].id] || !!p.solved[CASES[idx].id]; }
+
+/* =====================================================================
+   SOUND (Web Audio, generated — no assets)
+   ===================================================================== */
+let audioCtx = null;
+function beep(kind, enabled) {
+  if (!enabled) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const seqs = {
+      click: [[880, 0.04, "square", 0.03]],
+      analyze: [[520, 0.06, "sine", 0.06], [780, 0.08, "sine", 0.05]],
+      fail: [[220, 0.14, "sawtooth", 0.06], [160, 0.22, "sawtooth", 0.06]],
+      win: [[523, 0.1, "triangle", 0.08], [659, 0.1, "triangle", 0.08], [784, 0.1, "triangle", 0.08], [1047, 0.28, "triangle", 0.08]],
+      error: [[140, 0.08, "square", 0.03]],
+    };
+    let t = audioCtx.currentTime;
+    (seqs[kind] || seqs.click).forEach(([f, d, type, vol]) => {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + d + 0.02);
+      t += d * 0.9;
+    });
+  } catch (e) { /* audio unsupported */ }
+}
+
+/* =====================================================================
+   REGEX ENGINE WRAPPER
+   ===================================================================== */
+const HAS_INDICES = (() => { try { new RegExp("a", "d"); return true; } catch (e) { return false; } })();
+
+function friendlyError(msg) {
+  const m = String(msg);
+  const rules = [
+    [/Unterminated group|missing \)/i, "Unclosed parenthesis — every ( needs a matching )."],
+    [/Unmatched '\)'|unmatched parentheses/i, "Stray ) — there's a closing parenthesis with no opening (."],
+    [/Unterminated character class|missing \]/i, "Unclosed character set — every [ needs a matching ]."],
+    [/Nothing to repeat/i, "A quantifier (*, +, ?, {n}) has nothing before it to repeat. Escape it with \\ if you meant the literal character."],
+    [/Invalid group/i, "Invalid group syntax — check the characters right after (? ."],
+    [/numbers out of order/i, "Quantifier range is backwards — {min,max} needs min ≤ max."],
+    [/range out of order/i, "Character range is backwards — use [a-z], not [z-a]."],
+    [/\\ at end of pattern|trailing backslash/i, "Pattern ends with a lone backslash — escape something, or remove it."],
+    [/Invalid escape/i, "Invalid escape sequence."],
+    [/Lone quantifier/i, "Unbalanced { } quantifier braces."],
+  ];
+  for (const [re, txt] of rules) if (re.test(m)) return txt;
+  return "Syntax error in pattern.";
+}
+
+function runRegex(pattern, flags, text) {
+  if (!pattern) return { status: "idle", matches: [] };
+  let re;
+  try {
+    new RegExp(pattern, flags); // validate with the user's flags only, so error text matches what they typed
+    re = new RegExp(pattern, flags + (HAS_INDICES ? "d" : ""));
+  } catch (e) {
+    return { status: "error", error: friendlyError(e.message), raw: e.message, matches: [] };
+  }
+  const matches = [];
+  let truncated = false, slow = false;
+  const t0 = performance.now();
+  const toM = (m) => ({
+    text: m[0], index: m.index, end: m.index + m[0].length,
+    groups: Array.from(m).slice(1),
+    gIdx: m.indices && m.indices[1] ? m.indices[1] : null,
+  });
+  if (!flags.includes("g")) {
+    const m = re.exec(text);
+    if (m) matches.push(toM(m));
+  } else {
+    re.lastIndex = 0;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      matches.push(toM(m));
+      if (m[0].length === 0) re.lastIndex++;
+      if (matches.length >= MAX_MATCHES) { truncated = true; break; }
+      if (performance.now() - t0 > 300) { slow = true; break; }
+    }
+  }
+  return { status: "ok", matches, truncated, slow, groupCount: (new RegExp("(?:" + pattern + ")|", flags.replace("g", ""))).exec("").length - 1 };
+}
+
+function evaluate(c, result) {
+  const actual = result.matches.map((m) => (c.matchMode === "group" ? (m.groups[0] === undefined ? "∅" : m.groups[0]) : m.text));
+  const expected = c.expectedMatches;
+  const exact = actual.length === expected.length && actual.every((a, i) => a === expected[i]);
+  // multiset diff for diagnostics
+  const pool = [...expected];
+  const extras = [];
+  actual.forEach((a) => { const i = pool.indexOf(a); if (i >= 0) pool.splice(i, 1); else extras.push(a); });
+  return { actual, exact, missing: pool, extras, hits: expected.length - pool.length };
+}
+
+/* =====================================================================
+   REGEX EXPLAINER (for the victory breakdown)
+   ===================================================================== */
+function explainRegex(src) {
+  const out = [];
+  let i = 0, groupNo = 0;
+  const escMap = {
+    d: "any digit (0–9)", D: "any non-digit", w: "a word character (letter, digit, _)", W: "a non-word character",
+    s: "whitespace", S: "a non-whitespace character", b: "a word boundary", B: "a non-boundary position",
+    n: "a newline", t: "a tab", r: "a carriage return",
+  };
+  const pushLit = (ch) => {
+    const last = out[out.length - 1];
+    if (last && last.kind === "lit") { last.tok += ch; last.desc = `literal text "${last.raw + ch}"`; last.raw += ch; }
+    else out.push({ kind: "lit", tok: ch, raw: ch, desc: `literal text "${ch}"` });
+  };
+  while (i < src.length) {
+    const ch = src[i];
+    if (ch === "\\") {
+      const n = src[i + 1] ?? "";
+      if (/[1-9]/.test(n)) { out.push({ tok: "\\" + n, desc: `backreference — the same text captured by group ${n}` }); }
+      else if (escMap[n]) { out.push({ tok: "\\" + n, desc: escMap[n] }); }
+      else { pushLit(n); out[out.length - 1].tok = out[out.length - 1].tok.slice(0, -1) + "\\" + n; }
+      i += 2; continue;
+    }
+    if (ch === "[") {
+      let j = i + 1;
+      if (src[j] === "^") j++;
+      if (src[j] === "]") j++;
+      while (j < src.length && src[j] !== "]") { if (src[j] === "\\") j++; j++; }
+      const tok = src.slice(i, j + 1);
+      const neg = tok[1] === "^";
+      out.push({ tok, desc: neg ? `any ONE character NOT in the set ${tok.slice(2, -1)}` : `any ONE character from the set ${tok.slice(1, -1)}` });
+      i = j + 1; continue;
+    }
+    if (ch === "(") {
+      const look = src.slice(i, i + 4);
+      if (look.startsWith("(?:")) { out.push({ tok: "(?:", desc: "start a non-capturing group" }); i += 3; continue; }
+      if (look.startsWith("(?=")) { out.push({ tok: "(?=", desc: "positive lookahead — what follows must match…" }); i += 3; continue; }
+      if (look.startsWith("(?!")) { out.push({ tok: "(?!", desc: "negative lookahead — what follows must NOT match…" }); i += 3; continue; }
+      if (look.startsWith("(?<=")) { out.push({ tok: "(?<=", desc: "positive lookbehind — what precedes must match…" }); i += 4; continue; }
+      if (look.startsWith("(?<!")) { out.push({ tok: "(?<!", desc: "negative lookbehind — what precedes must NOT match…" }); i += 4; continue; }
+      const named = src.slice(i).match(/^\(\?<([A-Za-z_]\w*)>/);
+      groupNo++;
+      if (named) { out.push({ tok: named[0], desc: `start capture group ${groupNo} named "${named[1]}"` }); i += named[0].length; continue; }
+      out.push({ tok: "(", desc: `start capture group ${groupNo}` }); i++; continue;
+    }
+    if (ch === ")") { out.push({ tok: ")", desc: "end group" }); i++; continue; }
+    if (ch === "*" || ch === "+" || ch === "?" || ch === "{") {
+      let tok = ch, desc;
+      if (ch === "{") {
+        const m = src.slice(i).match(/^\{(\d+)(,(\d*))?\}/);
+        if (!m) { pushLit(ch); i++; continue; }
+        tok = m[0];
+        desc = !m[2] ? `exactly ${m[1]} times` : m[3] === "" ? `${m[1]} or more times` : `between ${m[1]} and ${m[3]} times`;
+      } else desc = { "*": "zero or more times", "+": "one or more times", "?": "optional (zero or one time)" }[ch];
+      i += tok.length;
+      if (src[i] === "?") { tok += "?"; desc += " — lazy (as few as possible)"; i++; }
+      else if (ch !== "?" || tok.length > 1) desc += ch === "?" ? "" : " — greedy";
+      out.push({ tok, desc: "↳ repeat previous " + desc });
+      continue;
+    }
+    if (ch === "^") { out.push({ tok: "^", desc: "anchor: start of the line/text" }); i++; continue; }
+    if (ch === "$") { out.push({ tok: "$", desc: "anchor: end of the line/text" }); i++; continue; }
+    if (ch === ".") { out.push({ tok: ".", desc: "any single character except newline" }); i++; continue; }
+    if (ch === "|") { out.push({ tok: "|", desc: "OR — alternatively match what follows" }); i++; continue; }
+    pushLit(ch); i++;
+  }
+  return out;
+}
+
+/* =====================================================================
+   SMALL UI PIECES
+   ===================================================================== */
+function CoffeeButton({ compact }) {
+  return (
+    <a href={BMC_URL} target="_blank" rel="noopener noreferrer" className="coffee-btn" aria-label="Buy Me a Coffee (opens in a new tab)">
+      <span className="relative inline-block">
+        <span className="steam absolute -top-2 left-1 text-[10px]">~</span>
+        <span className="cup">☕</span>
+      </span>
+      <span className={compact ? "hidden sm:inline" : ""}>Buy Me a Coffee</span>
+    </a>
+  );
+}
+
+function SupportCard({ title = "Support the Project", text }) {
+  return (
+    <div className="panel2 p-4 flex flex-col sm:flex-row sm:items-center gap-3 justify-between" style={{ borderColor: "var(--coffee)" }}>
+      <div className="min-w-0">
+        <div className="label" style={{ color: "var(--coffee)" }}>// {title}</div>
+        <p className="text-sm mt-1 muted">{text || "Regex Noir is free, ad-free and runs entirely in your browser. If it sharpened your patterns, fuel the next case file."}</p>
+      </div>
+      <a href={BMC_URL} target="_blank" rel="noopener noreferrer" className="coffee-btn self-start sm:self-auto">
+        <span className="cup">☕</span> Buy Me a Coffee
+      </a>
+    </div>
+  );
+}
+
+function Modal({ children, onClose, labelledBy, wide }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape" && onClose) onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <div className="modal-back" onMouseDown={(e) => { if (e.target === e.currentTarget && onClose) onClose(); }}>
+      <div role="dialog" aria-modal="true" aria-labelledby={labelledBy} className={"panel modal p-5 sm:p-7 " + (wide ? "max-w-2xl" : "max-w-md")}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function fmtTime(s) {
+  s = Math.max(0, Math.round(s));
+  return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+}
+
+/* =====================================================================
+   HEADER
+   ===================================================================== */
+function Header({ progress, onReset, onToggleSound, onToggleTheme }) {
+  const solved = solvedCount(progress);
+  const { sound, theme } = progress.settings;
+  return (
+    <header className="relative md:sticky md:top-0 z-40 backdrop-blur" style={{ background: "var(--secondary)", borderBottom: "1px solid var(--border)" }}>
+      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3 justify-between">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-mono font-bold text-lg shrink-0" style={{ background: "var(--panel2)", border: "1px solid var(--accent)", color: "var(--accent)", boxShadow: "var(--glow)" }}>/.*/</div>
+          <div className="min-w-0">
+            <h1 className="font-bold text-lg sm:text-xl leading-tight tracking-tight">
+              <span className="accent glow-text">Regex Noir</span> <span className="muted font-mono text-sm sm:text-base">// Signal &amp; Cipher</span>
+            </h1>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="badge" style={{ color: "var(--ok)", borderColor: "var(--ok)" }} aria-live="polite">Cases Solved: {solved}/{CASES.length}</span>
+              <div className="progress-bar w-20 hidden sm:block"><div style={{ width: (solved / CASES.length) * 100 + "%" }} /></div>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button className="btn" onClick={onToggleSound} aria-pressed={sound} title="Toggle sound">{sound ? "🔊" : "🔇"}<span className="hidden md:inline">Sound</span></button>
+          <button className="btn" onClick={onToggleTheme} title="Switch between Cream and High Contrast">{theme === "light" ? "☀" : "◑"}<span className="hidden md:inline">{THEMES[theme]}</span></button>
+          <a className="btn" href="cheatsheet.html" title="Regex cheat sheet with live examples">📖<span className="hidden md:inline">Cheat Sheet</span></a>
+          <button className="btn btn-danger" onClick={onReset} title="Reset all progress">↺<span className="hidden md:inline">Reset</span></button>
+          <CoffeeButton compact />
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* =====================================================================
+   CASE STRIP
+   ===================================================================== */
+function CaseStrip({ progress, current, onSelect }) {
+  return (
+    <nav aria-label="Case files" className="scroll-x">
+      <div className="flex gap-2 py-2 pr-2">
+        {CASES.map((c, i) => {
+          const unlocked = isUnlocked(progress, i);
+          const solved = !!progress.solved[c.id];
+          return (
+            <button key={c.id} disabled={!unlocked}
+              className={"casebtn " + (i === current ? "active " : "") + (solved ? "solved" : "")}
+              onClick={() => onSelect(i)}
+              title={unlocked ? `${c.title} — ${c.chapter}` : "Locked — close the previous case"}
+              aria-current={i === current ? "true" : undefined}>
+              <div className="font-bold">{unlocked ? String(i + 1).padStart(2, "0") : "🔒"}</div>
+              <div className="text-[9px] tracking-widest uppercase opacity-75">{c.difficulty}</div>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
+/* =====================================================================
+   LEFT PANEL — DOSSIER
+   ===================================================================== */
+function Dossier({ c, idx, session, solvedRec, onHint, onReveal, onInsert }) {
+  return (
+    <section className="panel p-4 sm:p-5 flex flex-col gap-4" aria-labelledby="case-title">
+      <div>
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <span className="label">Case {String(idx + 1).padStart(2, "0")} // {c.chapter}</span>
+          <span className="badge" style={{ color: "var(--accent2)", borderColor: "var(--accent2)" }}>{c.difficulty}</span>
+        </div>
+        <h2 id="case-title" className="text-2xl font-bold mt-2 tracking-tight">{c.title}</h2>
+        {solvedRec && <div className="mt-2 text-sm ok font-mono">✓ Case closed · best score {solvedRec.score}</div>}
+      </div>
+
+      <div>
+        <div className="label mb-1">Case Briefing</div>
+        <p className="leading-relaxed text-[15px]">{c.briefing}</p>
+      </div>
+
+      <div className="panel2 p-3" style={{ borderLeft: "3px solid var(--accent)" }}>
+        <div className="label mb-1">Briefing Officer · {c.officer.name}</div>
+        <p className="text-sm italic muted leading-relaxed">“{c.officer.note}”</p>
+      </div>
+
+      <div>
+        <div className="label mb-2">Target Objectives</div>
+        <ul className="space-y-1.5">
+          {c.objectives.map((o, i) => (
+            <li key={i} className="flex gap-2 text-sm leading-relaxed"><span className="accent font-mono shrink-0">▸</span><span>{o}</span></li>
+          ))}
+        </ul>
+        <div className="mt-3 text-xs font-mono muted">
+          Evidence format: <span className="accent">{c.matchMode === "group" ? "capture group 1 of each match" : "full match text"}</span> · {c.expectedMatches.length} items expected · in order
+        </div>
+      </div>
+
+      <details className="panel2 p-3" open>
+        <summary className="flex items-center justify-between">
+          <span className="label">Cheat Sheet · {c.chapter}</span><span className="chev muted">▶</span>
+        </summary>
+        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {c.cheats.map(([t, d]) => (
+            <button key={t} type="button" onClick={() => !t.includes(" ") && onInsert(t)}
+              className="text-left flex items-start gap-2 text-sm p-1.5 rounded-md hover:bg-black/5"
+              title={t.includes(" ") ? d : "Click to insert into pattern"}>
+              <code className="tok shrink-0">{t}</code><span className="muted text-[13px] leading-snug">{d}</span>
+            </button>
+          ))}
+        </div>
+      </details>
+
+      <div className="panel2 p-3">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <span className="label">Intel Drawer</span>
+          <div className="flex gap-2 flex-wrap">
+            <button className="btn" onClick={onHint} disabled={session.hintUsed}>💡 {session.hintUsed ? "Hint shown" : "Request Hint (−200)"}</button>
+            {(session.failed >= 3 || session.revealed) && (
+              <button className="btn btn-danger" onClick={onReveal} disabled={session.revealed}>🗝 {session.revealed ? "Declassified" : "Declassify (−500)"}</button>
+            )}
+          </div>
+        </div>
+        {session.hintUsed && <p className="mt-3 text-sm warn leading-relaxed">{c.hint}</p>}
+        {session.revealed && (
+          <div className="mt-3 text-sm">
+            <span className="muted">Reference solution: </span>
+            <code className="tok">/{c.solutionPattern}/{c.flags}</code>
+          </div>
+        )}
+        {!session.hintUsed && session.failed < 3 && <p className="mt-2 text-xs muted">After 3 failed submissions you may declassify the reference solution.</p>}
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+   DATA FEED (highlighted target text)
+   ===================================================================== */
+function DataFeed({ text, matches, showGroup }) {
+  const lines = text.split("\n").length;
+  const nodes = useMemo(() => {
+    const out = [];
+    let pos = 0;
+    matches.forEach((m, k) => {
+      if (m.index < pos) return;
+      if (m.index > pos) out.push(text.slice(pos, m.index));
+      if (m.end === m.index) { out.push(<span key={"z" + k} className="zero" title="zero-length match" />); pos = m.index; return; }
+      const parts = [];
+      const g = showGroup && m.gIdx && m.gIdx[0] >= m.index && m.gIdx[1] <= m.end ? m.gIdx : null;
+      const seg = (s, e, key, cls) => {
+        const str = text.slice(s, e);
+        // render newlines inside a match visibly
+        const bits = str.split("\n");
+        return bits.flatMap((b, bi) => (bi === 0 ? [b] : [<span key={key + "n" + bi} className="nl-hit">↵</span>, "\n", b]))
+          .map((x, xi) => (typeof x === "string" && cls ? <mark key={key + xi} className={cls}>{x}</mark> : x));
+      };
+      if (g && g[1] > g[0]) {
+        parts.push(...seg(m.index, g[0], "a", null));
+        parts.push(<mark key="g" className="grp">{text.slice(g[0], g[1])}</mark>);
+        parts.push(...seg(g[1], m.end, "b", null));
+      } else {
+        parts.push(...seg(m.index, m.end, "c", null));
+      }
+      out.push(<mark key={"m" + k} className={"hit" + (k % 2 ? " alt" : "")} title={`match ${k + 1}`}>{parts}</mark>);
+      pos = m.end;
+    });
+    if (pos < text.length) out.push(text.slice(pos));
+    return out;
+  }, [text, matches, showGroup]);
+
+  return (
+    <div className="feed" tabIndex={0} aria-label="Target data feed">
+      <div className="feed-inner">
+        <div className="gutter" aria-hidden="true">
+          {Array.from({ length: lines }, (_, i) => <div key={i}>{String(i + 1).padStart(2, "0")}</div>)}
+        </div>
+        <pre>{nodes}</pre>
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================================
+   RIGHT PANEL — CONSOLE
+   ===================================================================== */
+function ConsolePanel({ c, pattern, setPattern, flags, toggleFlag, result, logs, onAnalyze, onSubmit, shake, timer, inputRef }) {
+  const err = result.status === "error";
+  const count = result.matches.length;
+  return (
+    <section className="panel p-4 sm:p-5 flex flex-col gap-4" aria-label="Regex execution console">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <span className="label">Regex Execution Console</span>
+        {timer && (
+          <span className={"badge " + (timer.left > 0 ? "" : "err")} style={timer.left > 0 ? { color: "var(--warn)", borderColor: "var(--warn)" } : { borderColor: "var(--err)" }}>
+            ⏱ {timer.left > 0 ? "Par " + fmtTime(timer.left) : "Over par +" + fmtTime(-timer.left)}
+          </span>
+        )}
+      </div>
+
+      <div className={shake ? "shake" : ""}>
+        <label htmlFor="regex-input" className="sr-only">Regular expression pattern</label>
+        <div className={"regex-wrap " + (err ? "bad" : "")}>
+          <span className="slash">/</span>
+          <input id="regex-input" ref={inputRef} value={pattern} spellCheck={false} autoComplete="off" autoCapitalize="off" autoCorrect="off"
+            placeholder="type your pattern…" aria-invalid={err}
+            onChange={(e) => setPattern(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); onSubmit(); }
+              else if (e.key === "Enter") { e.preventDefault(); onAnalyze(); }
+            }} />
+          <span className="slash">/</span>
+          <span className="font-mono accent text-sm w-8">{flags}</span>
+        </div>
+        <div className="flex items-center gap-2 mt-2 flex-wrap">
+          <span className="label mr-1">Flags</span>
+          {[["g", "global"], ["i", "ignore case"], ["m", "multiline"]].map(([f, name]) => (
+            <button key={f} className={"chip " + (flags.includes(f) ? "on" : "")} onClick={() => toggleFlag(f)} aria-pressed={flags.includes(f)} title={name}>{f}</button>
+          ))}
+          <span className="text-xs muted ml-auto hidden sm:inline"><span className="kbd">Enter</span> analyze · <span className="kbd">Ctrl</span>+<span className="kbd">Enter</span> submit</span>
+        </div>
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="label">Target Data Feed</span>
+          <span className="text-xs font-mono muted">{c.lines.length} lines · {c.targetText.length} chars</span>
+        </div>
+        <DataFeed text={c.targetText} matches={result.matches} showGroup={true} />
+        <div className="flex gap-4 mt-2 text-xs muted font-mono flex-wrap">
+          <span><mark className="hit px-1">match</mark> full match</span>
+          <span><mark className="grp px-1">grp</mark> capture group 1</span>
+        </div>
+      </div>
+
+      <div className="flex gap-2 flex-wrap">
+        <button className="btn flex-1" onClick={onAnalyze}>◎ Analyze Signal</button>
+        <button className="btn btn-hot flex-1" onClick={onSubmit} disabled={err || !pattern}>⬢ Submit Evidence</button>
+      </div>
+
+      <div className="console" aria-live="polite">
+        <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: "1px solid var(--border)" }}>
+          <span className="label">Feedback Console</span>
+          <span className={"font-mono text-xs " + (err ? "err" : count ? "accent" : "muted")}>
+            {err ? "SYNTAX ERROR" : result.status === "idle" ? "AWAITING PATTERN" : `${count} match${count === 1 ? "" : "es"}${result.truncated ? "+" : ""}`}
+          </span>
+        </div>
+        <div className="px-3 py-2">
+          {err && (
+            <div className="err">
+              <div>✖ {result.error}</div>
+              <div className="muted text-[11px] mt-1">engine: {result.raw}</div>
+            </div>
+          )}
+          {result.status === "ok" && (
+            <>
+              {result.slow && <div className="warn">⚠ Execution throttled — pattern is backtracking heavily.</div>}
+              {count === 0 ? <div className="muted">No matches in the feed.</div> : (
+                <div className="scroll-x">
+                  <table className="text-left w-full">
+                    <thead><tr className="muted text-[11px] uppercase tracking-wider">
+                      <th className="pr-3 font-normal">#</th><th className="pr-3 font-normal">match</th>
+                      {Array.from({ length: Math.min(result.groupCount, 3) }, (_, g) => <th key={g} className="pr-3 font-normal">grp {g + 1}</th>)}
+                      <th className="font-normal">@</th>
+                    </tr></thead>
+                    <tbody>
+                      {result.matches.slice(0, 8).map((m, k) => (
+                        <tr key={k}>
+                          <td className="pr-3 muted">{k + 1}</td>
+                          <td className="pr-3 accent2 whitespace-pre">{JSON.stringify(m.text).slice(1, -1) || "∅"}</td>
+                          {Array.from({ length: Math.min(result.groupCount, 3) }, (_, g) => <td key={g} className="pr-3 accent whitespace-pre">{m.groups[g] === undefined ? "—" : m.groups[g] || "∅"}</td>)}
+                          <td className="muted">{m.index}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {count > 8 && <div className="muted mt-1">…and {count - 8} more</div>}
+                </div>
+              )}
+              {!flags.includes("g") && c.expectedMatches.length > 1 && <div className="warn mt-1">ⓘ Without the g flag only the first match is returned.</div>}
+            </>
+          )}
+        </div>
+        {logs.length > 0 && (
+          <div className="console-log px-3 py-2 space-y-1" style={{ borderTop: "1px solid var(--border)" }}>
+            {logs.map((l) => (
+              <div key={l.id} className={l.kind}><span className="muted">[{l.time}]</span> {l.text}</div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+   FINAL BADGE — "Master Cryptanalyst" emblem (awarded at 10/10)
+   Colors are fixed (not CSS vars) so the downloaded PNG looks the same
+   regardless of the active theme.
+   ===================================================================== */
+const EMBLEM_COLORS = { cream: "#fbf7ef", sand: "#ebe2d0", teal: "#1f6f68", tealDark: "#164f4a", ink: "#2d2a24", line: "#ddd1bb" };
+
+function MasterEmblem({ score, date, size = 280, svgRef }) {
+  const C = EMBLEM_COLORS;
+  const dateStr = date ? new Date(date).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "";
+  return (
+    <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={size} height={size} role="img"
+      aria-label={`Master Cryptanalyst badge: all ${CASES.length} cases closed, ${score} points`}>
+      <defs>
+        <path id="emblem-ring" d="M 200,200 m -168,0 a 168,168 0 1,1 336,0 a 168,168 0 1,1 -336,0" />
+      </defs>
+      <circle cx="200" cy="200" r="194" fill={C.teal} />
+      <circle cx="200" cy="200" r="186" fill={C.sand} />
+      <text fill={C.tealDark} fontFamily="JetBrains Mono, ui-monospace, monospace" fontSize="15" fontWeight="700" letterSpacing="3">
+        <textPath href="#emblem-ring" startOffset="0" textLength="1040" lengthAdjust="spacing">
+          REGEX NOIR ✦ SIGNAL &amp; CIPHER ✦ ALL CASES CLOSED ✦ {CASES.length}/{CASES.length} ✦
+        </textPath>
+      </text>
+      <circle cx="200" cy="200" r="150" fill={C.cream} stroke={C.teal} strokeWidth="3" />
+      <circle cx="200" cy="200" r="141" fill="none" stroke={C.line} strokeWidth="1.5" strokeDasharray="4 5" />
+      {/* crown */}
+      <path d="M160 108 L172 84 L186 100 L200 74 L214 100 L228 84 L240 108 Z" fill={C.teal} />
+      <rect x="160" y="110" width="80" height="7" rx="2" fill={C.teal} />
+      {/* core glyph */}
+      <text x="200" y="196" textAnchor="middle" fill={C.ink} fontFamily="JetBrains Mono, ui-monospace, monospace" fontSize="54" fontWeight="700">/.*/</text>
+      {/* ribbon */}
+      <path d="M38 222 L72 222 L62 241 L72 260 L38 260 Z" fill={C.tealDark} />
+      <path d="M362 222 L328 222 L338 241 L328 260 L362 260 Z" fill={C.tealDark} />
+      <rect x="62" y="214" width="276" height="40" rx="4" fill={C.teal} />
+      <text x="200" y="240" textAnchor="middle" fill={C.cream} fontFamily="Space Grotesk, system-ui, sans-serif" fontSize="19" fontWeight="700" letterSpacing="2.5">MASTER CRYPTANALYST</text>
+      <text x="200" y="284" textAnchor="middle" fill={C.ink} fontFamily="JetBrains Mono, ui-monospace, monospace" fontSize="14" fontWeight="700">{score} PTS</text>
+      <text x="200" y="305" textAnchor="middle" fill={C.teal} fontFamily="JetBrains Mono, ui-monospace, monospace" fontSize="11" letterSpacing="1.5">{dateStr.toUpperCase()}</text>
+    </svg>
+  );
+}
+
+function downloadEmblem(svgEl) {
+  if (!svgEl) return;
+  const xml = new XMLSerializer().serializeToString(svgEl);
+  const url = URL.createObjectURL(new Blob([xml], { type: "image/svg+xml;charset=utf-8" }));
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1200;
+    canvas.getContext("2d").drawImage(img, 0, 0, 1200, 1200);
+    URL.revokeObjectURL(url);
+    canvas.toBlob((blob) => {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "regex-noir-master-cryptanalyst.png";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    }, "image/png");
+  };
+  img.src = url;
+}
+
+function CompletionModal({ score, date, onClose }) {
+  const svgRef = useRef(null);
+  return (
+    <Modal onClose={onClose} labelledBy="master-title">
+      <div className="text-center">
+        <div className="label">Final Commendation</div>
+        <h3 id="master-title" className="text-2xl font-bold mt-1">Master Cryptanalyst</h3>
+        <p className="muted text-sm mt-1">Every case file closed. The grid is quiet — for now.</p>
+        <div className="flex justify-center my-4">
+          <MasterEmblem score={score} date={date} size={260} svgRef={svgRef} />
+        </div>
+        <p className="text-sm">You've worked through literals, quantifiers, anchors, sets, groups, backreferences, lazy matching and lookaheads.</p>
+      </div>
+      <div className="flex gap-2 mt-5 justify-center flex-wrap">
+        <button className="btn" onClick={() => downloadEmblem(svgRef.current)}>⬇ Download Badge</button>
+        <button className="btn btn-primary" onClick={onClose} autoFocus>Close</button>
+      </div>
+    </Modal>
+  );
+}
+
+/* =====================================================================
+   VICTORY MODAL
+   ===================================================================== */
+function VictoryModal({ data, onNext, onClose, onClaim, solvedTotal }) {
+  const { c, idx, pattern, flags, breakdown, record } = data;
+  const tokens = explainRegex(pattern);
+  const last = idx === CASES.length - 1;
+  const showSupport = solvedTotal > 0 && solvedTotal % 3 === 0;
+  return (
+    <Modal onClose={onClose} labelledBy="win-title" wide>
+      <div className="text-center">
+        <div className="stamp">CASE CLOSED</div>
+        <h3 id="win-title" className="text-2xl font-bold mt-4">{c.title}</h3>
+        <p className="muted text-sm mt-1">Case {String(idx + 1).padStart(2, "0")} · {c.chapter}</p>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-5 text-center">
+        <div className="panel2 p-2"><div className="label">Score</div><div className="text-xl font-bold accent font-mono">{record.score}</div></div>
+        <div className="panel2 p-2"><div className="label">Misfires</div><div className="text-xl font-bold font-mono">{record.failed}</div></div>
+        <div className="panel2 p-2"><div className="label">Length</div><div className="text-xl font-bold font-mono">{pattern.length}<span className="muted text-xs">/{c.solutionPattern.length}</span></div></div>
+        <div className="panel2 p-2"><div className="label">Time</div><div className="text-xl font-bold font-mono">{fmtTime(record.time)}</div></div>
+      </div>
+
+      <div className="panel2 p-3 mt-3 font-mono text-xs space-y-0.5">
+        {breakdown.map(([k, v], i) => (
+          <div key={i} className="flex justify-between gap-2"><span className="muted">{k}</span><span className={v >= 0 ? "ok" : "err"}>{v >= 0 ? "+" : ""}{v}</span></div>
+        ))}
+      </div>
+
+      <div className="mt-4">
+        <div className="label mb-2">Your Pattern — Breakdown</div>
+        <div className="panel2 p-3 font-mono text-sm break-all"><span className="accent2">/</span>{pattern}<span className="accent2">/</span><span className="accent">{flags}</span></div>
+        <ul className="mt-2 space-y-1 max-h-56 overflow-auto pr-1">
+          {tokens.map((t, i) => (
+            <li key={i} className="flex gap-3 items-start text-sm"><code className="tok shrink-0">{t.tok}</code><span className="muted">{t.desc}</span></li>
+          ))}
+        </ul>
+        {pattern !== c.solutionPattern && (
+          <div className="text-xs muted mt-3">Reference: <code className="tok">/{c.solutionPattern}/{c.flags}</code></div>
+        )}
+      </div>
+
+      <div className="panel2 p-3 mt-4" style={{ borderColor: "var(--warn)" }}>
+        <div className="label" style={{ color: "var(--warn)" }}>Concept Unlocked</div>
+        <div className="font-bold mt-1">{c.conceptUnlocked}</div>
+      </div>
+
+      {showSupport && <div className="mt-4"><SupportCard title={`${solvedTotal} cases closed`} text="You're on a streak, detective. If Regex Noir is helping you level up, a coffee keeps new cases coming." /></div>}
+
+      <div className="flex gap-2 mt-5 justify-end flex-wrap">
+        <button className="btn" onClick={onClose}>Review Case</button>
+        {solvedTotal >= CASES.length && (last || !onNext)
+          ? <button className="btn btn-primary" onClick={onClaim} autoFocus>♛ Claim Your Badge</button>
+          : !last ? <button className="btn btn-primary" onClick={onNext} autoFocus>Next Case ▸</button>
+          : <button className="btn btn-primary" onClick={onClose} autoFocus>Close</button>}
+      </div>
+    </Modal>
+  );
+}
+
+/* =====================================================================
+   APP
+   ===================================================================== */
+let logId = 0;
+function App() {
+  const [progress, setProgress] = useState(loadProgress);
+  const [current, setCurrent] = useState(() => {
+    const p = loadProgress();
+    const i = Math.min(Math.max(0, p.current | 0), CASES.length - 1);
+    return isUnlocked(p, i) ? i : 0;
+  });
+  const c = CASES[current];
+  const draft = progress.drafts[c.id] || { pattern: "", flags: c.startFlags };
+  const [pattern, setPatternState] = useState(draft.pattern);
+  const [flags, setFlags] = useState(draft.flags);
+  const [logs, setLogs] = useState([]);
+  const [victory, setVictory] = useState(null);
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [showMaster, setShowMaster] = useState(false);
+  const [shake, setShake] = useState(false);
+  const [now, setNow] = useState(Date.now());
+  const inputRef = useRef(null);
+  const sound = progress.settings.sound;
+
+  const session = progress.sessions[c.id] || { failed: 0, hintUsed: false, revealed: false, start: null };
+
+  // persist
+  useEffect(() => { saveProgress(progress); }, [progress]);
+  useEffect(() => { document.documentElement.setAttribute("data-theme", progress.settings.theme); }, [progress.settings.theme]);
+
+  // switching case → load draft, start session timer
+  useEffect(() => {
+    const d = progress.drafts[c.id] || { pattern: "", flags: c.startFlags };
+    setPatternState(d.pattern);
+    setFlags(d.flags);
+    setLogs([]);
+    setProgress((p) => {
+      const s = p.sessions[c.id];
+      const next = { ...p, current };
+      if (!s || !s.start) next.sessions = { ...p.sessions, [c.id]: { failed: 0, hintUsed: false, revealed: false, ...(s || {}), start: Date.now() } };
+      return next;
+    });
+    // eslint-disable-next-line
+  }, [current]);
+
+  // timer tick (only for timed cases)
+  useEffect(() => {
+    if (!c.timeLimit || progress.solved[c.id]) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [current, c.timeLimit, progress.solved]);
+
+  const saveDraft = (pt, fl) => setProgress((p) => ({ ...p, drafts: { ...p.drafts, [c.id]: { pattern: pt, flags: fl } } }));
+  const setPattern = (v) => { setPatternState(v); saveDraft(v, flags); };
+  const toggleFlag = (f) => {
+    const nf = ["g", "i", "m"].filter((x) => (x === f ? !flags.includes(x) : flags.includes(x))).join("");
+    setFlags(nf); saveDraft(pattern, nf); beep("click", sound);
+  };
+
+  const result = useMemo(() => runRegex(pattern, flags, c.targetText), [pattern, flags, c]);
+
+  const log = (text, kind = "") => {
+    const d = new Date();
+    const time = [d.getHours(), d.getMinutes(), d.getSeconds()].map((n) => String(n).padStart(2, "0")).join(":");
+    setLogs((l) => [{ id: ++logId, text, kind, time }, ...l].slice(0, 30));
+  };
+
+  const updateSession = (patch) => setProgress((p) => ({ ...p, sessions: { ...p.sessions, [c.id]: { ...session, ...(p.sessions[c.id] || {}), ...patch } } }));
+
+  const analyze = () => {
+    if (result.status === "idle") { log("No pattern loaded. Type a regex first.", "muted"); beep("error", sound); return; }
+    if (result.status === "error") { log("✖ " + result.error, "err"); beep("error", sound); return; }
+    const ev = evaluate(c, result);
+    beep("analyze", sound);
+    log(`◎ Signal analyzed: ${result.matches.length} match(es). ${ev.hits}/${c.expectedMatches.length} target items identified.`, "accent");
+    if (ev.extras.length) log(`  ⚠ ${ev.extras.length} false positive(s): ${ev.extras.slice(0, 4).map((x) => JSON.stringify(x)).join(", ")}${ev.extras.length > 4 ? "…" : ""}`, "warn");
+    if (ev.missing.length) log(`  ⚠ ${ev.missing.length} target item(s) still missing.`, "warn");
+    if (ev.exact) log("  ✓ Evidence looks airtight. Submit when ready.", "ok");
+    else if (!ev.extras.length && !ev.missing.length) log("  ⚠ Right items, wrong order or count — check your flags.", "warn");
+  };
+
+  const submit = () => {
+    if (result.status !== "ok") { analyze(); return; }
+    const ev = evaluate(c, result);
+    if (!ev.exact) {
+      const failed = (session.failed || 0) + 1;
+      updateSession({ failed });
+      setShake(true); setTimeout(() => setShake(false), 450);
+      beep("fail", sound);
+      let why = [];
+      if (ev.missing.length) why.push(`${ev.missing.length} missing`);
+      if (ev.extras.length) why.push(`${ev.extras.length} false positive(s)`);
+      if (!why.length) why.push("order/count mismatch");
+      log(`✖ Evidence rejected (${why.join(", ")}). Misfire #${failed}: −100.`, "err");
+      if (c.matchMode === "group" && result.groupCount === 0) log("  ⓘ This case reads capture group 1 — your pattern has no capturing group.", "warn");
+      if (failed === 3) log("  ⓘ Declassify option is now available in the Intel Drawer.", "muted");
+      return;
+    }
+    // success
+    const start = session.start || Date.now();
+    const time = Math.round((Date.now() - start) / 1000);
+    const breakdown = [["Base evidence value", 1000]];
+    if (session.failed) breakdown.push([`Misfires ×${session.failed}`, -100 * session.failed]);
+    if (session.hintUsed) breakdown.push(["Hint requested", -200]);
+    if (session.revealed) breakdown.push(["Solution declassified", -500]);
+    const efficient = pattern.length <= c.solutionPattern.length && !session.revealed;
+    if (efficient) breakdown.push(["Efficiency bonus (≤ reference length)", 150]);
+    let underPar = false;
+    if (c.timeLimit) {
+      underPar = time <= c.timeLimit;
+      if (underPar) breakdown.push(["Under par time", Math.round(500 * (1 - time / c.timeLimit)) + 100]);
+    }
+    let score = Math.max(100, breakdown.reduce((s, [, v]) => s + v, 0));
+    const prev = progress.solved[c.id];
+    const record = {
+      score: prev ? Math.max(prev.score, score) : score, lastScore: score, pattern, flags, time,
+      failed: session.failed || 0, hintUsed: !!session.hintUsed, revealed: !!session.revealed,
+      efficient: efficient || !!(prev && prev.efficient), underPar: underPar || !!(prev && prev.underPar), solvedAt: Date.now(),
+    };
+    const newSolved = { ...progress.solved, [c.id]: record };
+    const total = CASES.filter((x) => newSolved[x.id]).length;
+    setProgress((p) => ({ ...p, solved: newSolved, completedAt: p.completedAt || (total >= CASES.length ? Date.now() : undefined), sessions: { ...p.sessions, [c.id]: { failed: 0, hintUsed: false, revealed: false, start: null } } }));
+    beep("win", sound);
+    log(`✓ Evidence accepted. Case closed for ${score} points.`, "ok");
+    setVictory({ c, idx: current, pattern, flags, breakdown, record: { ...record, score }, total });
+  };
+
+  const goNext = () => {
+    setVictory(null);
+    if (current < CASES.length - 1) setCurrent(current + 1);
+    setTimeout(() => inputRef.current && inputRef.current.focus(), 50);
+  };
+
+  const insertToken = (t) => {
+    const el = inputRef.current;
+    if (!el) return setPattern(pattern + t);
+    const s = el.selectionStart ?? pattern.length, e = el.selectionEnd ?? pattern.length;
+    const v = pattern.slice(0, s) + t + pattern.slice(e);
+    setPattern(v);
+    requestAnimationFrame(() => { el.focus(); el.setSelectionRange(s + t.length, s + t.length); });
+  };
+
+  const doReset = () => {
+    const fresh = structuredClone(DEFAULT_PROGRESS);
+    fresh.settings = progress.settings;
+    setProgress(fresh);
+    setCurrent(0);
+    setPatternState(""); setFlags(CASES[0].startFlags); setLogs([]);
+    setConfirmReset(false);
+    beep("fail", sound);
+  };
+
+  const timer = c.timeLimit && !progress.solved[c.id] && session.start
+    ? { left: c.timeLimit - Math.floor((now - session.start) / 1000) } : null;
+
+  const earned = BADGES.filter((b) => b.test(progress));
+  const total = solvedCount(progress);
+  const totalScore = Object.values(progress.solved).reduce((s, r) => s + (r.score || 0), 0);
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header progress={progress}
+        onReset={() => setConfirmReset(true)}
+        onToggleSound={() => setProgress((p) => ({ ...p, settings: { ...p.settings, sound: !p.settings.sound } }))}
+        onToggleTheme={() => setProgress((p) => ({ ...p, settings: { ...p.settings, theme: p.settings.theme === "light" ? "contrast" : "light" } }))} />
+
+      <main className="max-w-7xl w-full mx-auto px-4 py-4 flex-1 flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+          <div className="min-w-0 flex-1"><CaseStrip progress={progress} current={current} onSelect={(i) => { setCurrent(i); beep("click", sound); }} /></div>
+          <div className="flex items-center gap-3 font-mono text-xs muted shrink-0">
+            <span>Total score <span className="accent font-bold">{totalScore}</span></span>
+            <span>Badges <span className="warn font-bold">{earned.length}/{BADGES.length}</span></span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-4 items-start">
+          <Dossier c={c} idx={current} session={session} solvedRec={progress.solved[c.id]}
+            onHint={() => { updateSession({ hintUsed: true }); beep("click", sound); log("💡 Hint transmitted: −200 on this case.", "warn"); }}
+            onReveal={() => { updateSession({ revealed: true }); beep("click", sound); log("🗝 Reference solution declassified: −500 on this case.", "err"); }}
+            onInsert={insertToken} />
+          <ConsolePanel c={c} pattern={pattern} setPattern={setPattern} flags={flags} toggleFlag={toggleFlag}
+            result={result} logs={logs} onAnalyze={analyze} onSubmit={submit} shake={shake} timer={timer} inputRef={inputRef} />
+        </div>
+
+        <section className="panel p-4" aria-label="Badges">
+          <div className="label mb-2">Commendations</div>
+          <div className="flex flex-wrap gap-2">
+            {BADGES.map((b) => {
+              const has = earned.includes(b);
+              return <span key={b.id} className={"badge " + (has ? "earned" : "")} title={b.desc}>{has ? b.icon : "·"} {b.name}</span>;
+            })}
+          </div>
+        </section>
+
+        {total >= CASES.length && (
+          <section className="panel p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4" style={{ borderColor: "var(--accent)" }} aria-label="Final badge">
+            <MasterEmblem score={totalScore} date={progress.completedAt} size={120} />
+            <div className="flex-1 text-center sm:text-left">
+              <div className="label accent">Final Commendation Earned</div>
+              <div className="text-xl font-bold mt-1">Master Cryptanalyst</div>
+              <p className="muted text-sm mt-1">All {CASES.length} cases closed with {totalScore} total points. Replay any case to improve your score.</p>
+            </div>
+            <button className="btn btn-primary" onClick={() => setShowMaster(true)}>♛ View Badge</button>
+          </section>
+        )}
+
+        {total > 0 && total % 3 === 0 && !victory && (
+          <SupportCard title={`Milestone · ${total} cases closed`} text="Another three cases in the bag. If you're enjoying the investigation, a coffee keeps the case files coming." />
+        )}
+      </main>
+
+      <footer className="mt-6" style={{ background: "var(--secondary)", borderTop: "1px solid var(--border)" }}>
+        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-4 md:items-center justify-between">
+          <div className="text-sm muted">
+            <div><span className="accent font-bold">Regex Noir</span> // Signal &amp; Cipher — learn regular expressions one case at a time.</div>
+            <div className="text-xs mt-1 font-mono">Progress is stored only in this browser (localStorage). No accounts, no tracking.</div>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <a className="btn" href="cheatsheet.html">📖 Regex Cheat Sheet</a>
+            <span className="label">Support Project</span>
+            <CoffeeButton />
+          </div>
+        </div>
+      </footer>
+
+      {victory && <VictoryModal data={victory} solvedTotal={victory.total} onNext={goNext} onClose={() => setVictory(null)}
+        onClaim={() => { setVictory(null); setShowMaster(true); }} />}
+
+      {showMaster && <CompletionModal score={totalScore} date={progress.completedAt || Date.now()} onClose={() => setShowMaster(false)} />}
+
+      {confirmReset && (
+        <Modal onClose={() => setConfirmReset(false)} labelledBy="reset-title">
+          <h3 id="reset-title" className="text-xl font-bold err">Burn all case files?</h3>
+          <p className="muted text-sm mt-2 leading-relaxed">This erases every solved case, score, badge and saved draft from this browser. Your sound and theme settings are kept. This cannot be undone.</p>
+          <div className="flex gap-2 justify-end mt-5">
+            <button className="btn" onClick={() => setConfirmReset(false)} autoFocus>Cancel</button>
+            <button className="btn" style={{ borderColor: "var(--err)", color: "var(--err)" }} onClick={doReset}>Reset Progress</button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

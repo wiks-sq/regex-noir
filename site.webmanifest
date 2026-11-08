@@ -1,0 +1,14 @@
+{
+  "name": "Regex Noir // Signal & Cipher",
+  "short_name": "Regex Noir",
+  "description": "Learn regular expressions by solving cyber-investigation cases.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8f3e8",
+  "theme_color": "#ebe2d0",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+  Source for og-image.png (1200x630 social preview).
+  Regenerate from the project root with:
+    google-chrome --headless=new --disable-gpu --hide-scrollbars --window-size=1200,630 \
+      --virtual-time-budget=8000 --screenshot=og-image.png tools/og-image.html
+  Colors follow the in-game Cream theme (60% cream / 30% sand / 10% teal).
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Regex Noir OG image</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f3e8; --panel: #fbf7ef; --secondary: #ebe2d0; --bg2: #f1e9da; --border: #ddd1bb;
+    --text: #2d2a24; --muted: #776d5f; --accent: #1f6f68; --mark: #cfe6e1; --mark-text: #1b3d39;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; background: var(--bg); color: var(--text); }
+  body { font-family: "Space Grotesk", system-ui, sans-serif; position: relative; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  .frame { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .main { flex: 1; display: flex; align-items: center; gap: 48px; padding: 0 64px; }
+
+  .left { flex: 0 0 520px; }
+  .brand { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+  .logo { width: 64px; height: 64px; border-radius: 16px; border: 2.5px solid var(--accent); background: var(--panel);
+          color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; }
+  .eyebrow { font-size: 15px; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  h1 { font-size: 92px; line-height: .95; font-weight: 700; letter-spacing: -.03em; }
+  .sub { font-size: 30px; color: var(--muted); margin-top: 12px; }
+  .tag { font-size: 25px; line-height: 1.35; margin-top: 28px; max-width: 500px; }
+  .tag b { color: var(--accent); }
+
+  .card { flex: 1; background: var(--secondary); border: 1.5px solid var(--border); border-radius: 22px; padding: 26px;
+          box-shadow: 0 18px 40px rgba(45, 42, 36, .10); transform: rotate(1.2deg); }
+  .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .label { font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .solved { font-size: 13px; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 99px; padding: 4px 12px; font-weight: 700; }
+  .input { background: var(--panel); border: 2px solid var(--accent); border-radius: 12px; padding: 14px 16px; font-size: 24px;
+           display: flex; gap: 6px; align-items: center; box-shadow: 0 0 0 4px rgba(31, 111, 104, .14); }
+  .input .s { color: var(--text); font-weight: 700; }
+  .input .f { color: var(--accent); margin-left: auto; font-weight: 700; }
+  .flags { display: flex; gap: 8px; margin: 12px 0 16px; }
+  .chip { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--panel);
+          display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: var(--muted); }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .feed { background: var(--bg2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 18px; line-height: 1.75; }
+  .ln { color: var(--muted); opacity: .6; margin-right: 14px; }
+  mark { background: var(--mark); color: var(--mark-text); border-radius: 4px; padding: 1px 3px; }
+  mark b { background: var(--accent); color: #fff; border-radius: 3px; padding: 0 2px; font-weight: 700; }
+  .dim { color: var(--muted); }
+
+  .strip { height: 76px; background: var(--secondary); border-top: 1.5px solid var(--border);
+           display: flex; align-items: center; justify-content: space-between; padding: 0 64px; font-size: 20px; }
+  .strip .pills { display: flex; gap: 10px; }
+  .pill { font-size: 15px; border: 1.5px solid var(--border); background: var(--panel); border-radius: 99px; padding: 6px 14px; color: var(--muted); }
+  .strip .cta { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="main">
+      <div class="left">
+        <div class="brand">
+          <div class="logo mono">/.*/</div>
+          <div class="eyebrow mono">Interactive Regex Game</div>
+        </div>
+        <h1>Regex Noir</h1>
+        <div class="sub mono">// Signal &amp; Cipher</div>
+        <p class="tag">Crack <b>10 cyber-investigation cases</b> by writing regular expressions, from your first <span class="mono">\d</span> to lookaheads.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="label mono">Case 01 · Phantom Ping</span>
+          <span class="solved mono">✓ 2/2 matched</span>
+        </div>
+        <div class="input mono"><span class="s">/</span>PHANTOM_(\d{3})<span class="s">/</span><span class="f">g</span></div>
+        <div class="flags mono"><span class="chip on">g</span><span class="chip">i</span><span class="chip">m</span></div>
+        <div class="feed mono">
+          <div><span class="ln">01</span><span class="dim">LOG 08:00: NORMAL_PING_101</span></div>
+          <div><span class="ln">02</span>LOG 08:01: <mark>PHANTOM_<b>942</b></mark> DETECTED</div>
+          <div><span class="ln">03</span><span class="dim">LOG 08:02: NORMAL_PING_102</span></div>
+          <div><span class="ln">04</span>LOG 08:05: <mark>PHANTOM_<b>108</b></mark> DETECTED</div>
+          <div><span class="ln">05</span><span class="dim">LOG 08:09: PHANTOM_ERR DETECTED</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="pills mono">
+        <span class="pill">Quantifiers</span><span class="pill">Anchors</span><span class="pill">Capture groups</span><span class="pill">Lookaheads</span>
+      </div>
+      <div class="cta mono">Free · No sign-up · Play in your browser</div>
+    </div>
+  </div>
+</body>
+</html>
